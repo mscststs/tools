@@ -1,0 +1,9 @@
+{
+  "editor.formatOnSaveMode": "file",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "rome.rome",
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "files.eol": "\n",
+}
