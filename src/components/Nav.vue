@@ -1,11 +1,30 @@
 <script setup lang="ts">
+
 import { homepage } from "../../package.json";
 import themes from "../../config/themes";
 import acknowledgments from "../../config/acknowledgments"
-import { themeChange } from 'theme-change'
+import { useLocalStorage } from "@vueuse/core";
+import { watchEffect } from "vue";
 
 
-themeChange(true);
+
+const siteTheme = useLocalStorage("theme", "");
+
+watchEffect(() => {
+  const html = document?.querySelector("html");
+  if (html) {
+    html.dataset.theme = siteTheme.value;
+  }
+})
+
+
+function toggleTheme(theme: string) {
+  if (siteTheme.value === theme) {
+    siteTheme.value = "";
+  } else {
+    siteTheme.value = theme
+  }
+}
 
 
 </script>
@@ -35,11 +54,13 @@ themeChange(true);
           class="menu dropdown-content z-[1] p-2 shadow-xl bg-base-100 rounded-box w-52 mt-4 max-h-96 overflow-y-auto">
           <div class="grid grid-cols-1 gap-3" tabindex="0">
             <button v-for="theme of themes" :key="theme" class="outline-base-content overflow-hidden rounded-lg text-left"
-              :data-set-theme="theme" data-act-class="[&_svg]:visible">
+              @click="toggleTheme(theme)">
               <div :data-theme="theme" class="bg-base-100 text-base-content w-full cursor-pointer font-sans">
                 <div class="grid grid-cols-5 grid-rows-3">
                   <div class="col-span-5 row-span-3 row-start-1 flex items-center gap-2 px-4 py-3">
-                    <i-icon icon="mdi:success" class="invisible h-3 w-3 shrink-0"></i-icon>
+                    <i-icon v-if="theme !== siteTheme" icon="mdi:success" class="invisible h-3 w-3 shrink-0"></i-icon>
+                    <i-icon v-else="theme!==siteTheme" icon="mdi:success" class=" h-3 w-3 shrink-0"></i-icon>
+
                     <div class="flex-grow text-sm">{{ theme }}</div>
                     <div class="flex h-full flex-shrink-0 flex-wrap gap-1" data-svelte-h="svelte-izuv7l">
                       <div class="bg-primary w-2 rounded"></div>
