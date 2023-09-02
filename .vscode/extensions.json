@@ -1,3 +1,8 @@
 {
-  "recommendations": ["Vue.volar", "Vue.vscode-typescript-vue-plugin", "rome.rome"]
+  "recommendations": [
+    "Vue.volar",
+    "Vue.vscode-typescript-vue-plugin",
+    "biomejs.biome",
+    "bradlc.vscode-tailwindcss"
+  ]
 }

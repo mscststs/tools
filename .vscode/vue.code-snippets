@@ -1,0 +1,31 @@
+{
+  "script": {
+    "prefix": "script",
+    "body": [
+      "<script setup lang=\"ts\">",
+      "  $1",
+      "</script>"
+    ],
+    "description": "Vue script"
+  },
+  "vue-template": {
+    "prefix": "template",
+    "body": [
+      "<script setup lang=\"ts\">",
+      "",
+      "</script>",
+      "",
+      "<template>",
+      "$1",
+      "</template>"
+    ],
+    "description": "Vue 模版"
+  },
+  "i-icon": {
+    "prefix": "icon",
+    "body": [
+      "<i-icon icon=\"$1\"></i-icon>"
+    ],
+    "description": "iconify"
+  }
+}

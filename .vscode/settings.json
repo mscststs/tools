@@ -1,9 +1,14 @@
 {
   "editor.formatOnSaveMode": "file",
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "rome.rome",
   "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "biomejs.biome"
   },
-  "files.eol": "\n",
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "files.eol": "\n"
 }
