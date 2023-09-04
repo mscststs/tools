@@ -11,10 +11,17 @@
   "dependencies": {
     "@vueuse/core": "^10.4.1",
     "theme-change": "^2.5.0",
-    "vue": "^3.3.4"
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.4"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.0.0",
+    "@iconify-icons/fa-solid": "^1.2.4",
+    "@iconify-icons/heroicons-outline": "^1.2.5",
+    "@iconify-icons/line-md": "^1.2.26",
+    "@iconify-icons/logos": "^1.2.34",
+    "@iconify-icons/mdi": "^1.2.47",
+    "@iconify-icons/mingcute": "^1.2.7",
     "@iconify/vue": "^4.1.1",
     "@types/node": "^20.5.8",
     "@vitejs/plugin-vue": "^4.2.3",

@@ -1,12 +1,12 @@
 export default [
   {
     name: "Vue",
-    icon: "logos:vue",
+    icon: "ext:vue",
     link: "https://cn.vuejs.org/",
   },
   {
     name: "Vite",
-    icon: "logos:vitejs",
+    icon: "ext:vitejs",
     link: "https://cn.vitejs.dev/",
   },
   {
@@ -16,12 +16,12 @@ export default [
   },
   {
     name: "Tailwind",
-    icon: "logos:tailwindcss-icon",
+    icon: "ext:tailwindcss",
     link: "https://tailwindcss.com/",
   },
   {
     name: "Iconify",
-    icon: "line-md:iconify1",
+    icon: "ext:iconify",
     link: "https://icon-sets.iconify.design/",
   },
 ];

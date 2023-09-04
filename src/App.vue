@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import Nav from "./components/Nav.vue"
+import Footer from "./components/Footer.vue";
+import { RouterView } from "vue-router";
 
 </script>
 
 <template>
-  <Nav></Nav>
-  <div class="container h-96 pt-20">
+  <div class="screen flex flex-col overflow-y-auto h-screen ">
 
-    On my way.
+    <Nav class="sticky top-0 z-[1] flex-none"></Nav>
+    <div class="container py-12 flex flex-auto">
+      <router-view></router-view>
+    </div>
+    <Footer class="flex-none"></Footer>
   </div>
 </template>
 
