@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { license } from "../../package.json"
 
 </script>
 
@@ -8,7 +9,7 @@
     <aside>
       <p>
         <i-icon icon="ext:copyleft" class="inline w-4 h-4"></i-icon>
-        {{ new Date().getFullYear() }} - Designed By <a href="https://mscststs.com" target="_blank"
+        {{ license }} . {{ new Date().getFullYear() }} . Designed By <a href="https://mscststs.com" target="_blank"
           referrerpolicy="no-referrer">@mscststs</a>
       </p>
     </aside>
