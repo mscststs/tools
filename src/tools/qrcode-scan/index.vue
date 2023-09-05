@@ -15,6 +15,31 @@ const result = ref("");
 const imgSrc = ref("");
 const imgRef = ref();
 
+const supportClipBoard = !!navigator?.clipboard?.read ?? false;
+const supportGetUserMedia = !!navigator?.mediaDevices?.getUserMedia ?? false;
+const supportGetDisplayMedia = !!navigator?.mediaDevices?.getUserMedia ?? false;
+
+
+
+async function handleReadDrop(event: DragEvent) {
+  event.preventDefault();
+  event.stopPropagation();
+  if (event?.dataTransfer?.items) {
+    const image = [...event.dataTransfer.items].find(item => {
+      return item.kind === "file" && item.type.startsWith("image/")
+    });
+    if (image) {
+      const imageFile = image?.getAsFile();
+      if (imageFile) {
+
+        const blob = new Blob([imageFile], { type: image.type || 'application/*' })
+        const dataUrl = window.URL.createObjectURL(blob)
+        imgSrc.value = dataUrl;
+      }
+    }
+  }
+
+}
 
 async function handleReadDisplay() {
   const mediaStream = await navigator.mediaDevices.getDisplayMedia({
@@ -100,35 +125,43 @@ watchEffect(async () => {
 </script>
 
 <template>
-  <div class="flex flex-col w-full">
-    <div class="line py-4 flex flex-row gap-2">
-      <button type="button" class="btn btn-neutral" @click="handleReadClipboard">
-        从剪贴板识别
-      </button>
-      <label class="btn btn-neutral">
-        <span>从文件识别</span>
-        <input type="file" name="" id="" class="hidden" @change="handleReadFile">
-      </label>
-      <button type="button" class="btn btn-neutral" @click="handleReadDisplay">
-        从屏幕识别
-      </button>
-      <button type="button" class="btn btn-neutral" @click="handleReadUserMedia">
-        从相机识别
-      </button>
-    </div>
-
-    <div class="line py-4" v-show="imgSrc">
-      <img :src="imgSrc" alt="" :ref="imgRef"
-        class="max-w-full max-h-[400px] sm:max-w-[600px] object-contain border-neutral-50 shadow hover:shadow-lg transition-shadow border-[1px]">
-    </div>
-
-    <div class="result py-4">
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text">识别结果</span>
+  <div class="flex flex-col w-full 2xl:flex-row" @drop="handleReadDrop" @dragover.prevent>
+    <div class="left flex flex-col flex-auto w-full 2xl:w-0.5">
+      <div class="line py-4 flex flex-row gap-2 flex-wrap justify-start sm:justify-center 2xl:justify-start">
+        <button type="button" class="btn btn-neutral" @click="handleReadClipboard" v-if="supportClipBoard">
+          从剪贴板识别
+        </button>
+        <label class="btn btn-neutral">
+          <span>从文件识别</span>
+          <input type="file" class="hidden" @change.prevent="handleReadFile" accept="image/*">
         </label>
-        <textarea class="textarea textarea-bordered h-24 w-full sm:w-[600px]" v-model="result" readonly></textarea>
+        <button type="button" class="btn btn-neutral" @click="handleReadDisplay" v-if="supportGetDisplayMedia">
+          从屏幕识别
+        </button>
+
+        <button type="button" class="btn btn-neutral" @click="handleReadUserMedia" v-if="supportGetUserMedia">
+          从相机识别
+        </button>
+      </div>
+
+      <div class="line py-4  flex justify-center 2xl:justify-start" v-show="imgSrc">
+        <img :src="imgSrc" alt="" :ref="imgRef"
+          class="max-w-full max-h-[400px] sm:max-w-[600px] object-contain border-neutral-50 shadow hover:shadow-lg transition-shadow border-[1px]">
       </div>
     </div>
+    <div class="divider divider-horizontal hidden 2xl:flex"></div>
+
+    <div class="right flex flex-auto w-full 2xl:w-0.5 ">
+
+      <div class="result flex-auto py-4 flex justify-center 2xl:justify-start">
+        <div class="form-control w-full sm:w-[600px]">
+          <label class="label">
+            <span class="label-text">识别结果</span>
+          </label>
+          <textarea class="textarea textarea-bordered h-24 w-full" v-model="result" readonly></textarea>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
