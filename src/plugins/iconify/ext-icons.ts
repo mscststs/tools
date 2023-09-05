@@ -12,6 +12,7 @@ export { default as cube3dline } from "@iconify-icons/mingcute/cube-3d-line";
 export { default as success } from "@iconify-icons/mdi/success";
 export { default as github } from "@iconify-icons/mdi/github";
 export { default as copyleft } from "@iconify-icons/mdi/copyleft";
+export { default as qrcodescan } from "@iconify-icons/mdi/qrcode-scan";
 
 // logos
 export { default as vue } from "@iconify-icons/logos/vue";

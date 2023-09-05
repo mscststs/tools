@@ -6,10 +6,10 @@ import { RouterView } from "vue-router";
 </script>
 
 <template>
-  <div class="screen flex flex-col overflow-y-auto h-screen ">
+  <div class=" flex flex-col overflow-y-auto h-screen ">
 
     <Nav class="sticky top-0 z-[1] flex-none"></Nav>
-    <div class="container py-12 flex flex-auto">
+    <div class="max-w-[100vw] px-6 py-6 flex flex-auto">
       <router-view></router-view>
     </div>
     <Footer class="flex-none"></Footer>

@@ -5,6 +5,7 @@ import themes from "../../config/themes";
 import acknowledgments from "../../config/acknowledgments"
 import { useLocalStorage } from "@vueuse/core";
 import { watchEffect } from "vue";
+import { RouterLink } from "vue-router"
 
 
 
@@ -30,26 +31,24 @@ function toggleTheme(theme: string) {
 </script>
 
 <template>
-  <div class="navbar backdrop-blur-xl px-12 gap-2 shadow">
+  <div class="navbar backdrop-blur-xl px-6 gap-2 shadow">
     <div class="flex-none">
-      <a class="btn btn-ghost normal-case text-xl" href="/">
+      <router-link to="/" class="btn btn-ghost normal-case text-xl">
         <i-icon icon="ext:tools"></i-icon>
         Tools
-      </a>
+      </router-link>
     </div>
     <div class="flex-auto justify-center">
-      <div class="form-control">
-        <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
-      </div>
+
     </div>
-    <div class="flex-none gap-2">
+    <div class="flex-none">
       <!-- Theme -->
       <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost rounded-btn">
+        <div tabindex="0" class="btn btn-ghost rounded-btn">
           <i-icon icon="ext:colorswatch" class="h-6 w-6"></i-icon>
-          Theme
-          <i-icon icon="ext:downfill" class="w-5 fill-current" />
-        </label>
+          <span class="hidden font-normal md:inline">主题</span>
+          <i-icon icon="ext:downfill" class="hidden w-5 fill-current sm:inline-block" />
+        </div>
         <div tabindex="0"
           class="menu dropdown-content z-[1] p-2 shadow-xl bg-base-100 rounded-box w-52 mt-4 max-h-96 overflow-y-auto">
           <div class="grid grid-cols-1 gap-3" tabindex="0">
@@ -79,11 +78,11 @@ function toggleTheme(theme: string) {
 
       <!-- About -->
       <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost rounded-btn">
+        <div tabindex="0" class="btn btn-ghost rounded-btn">
           <i-icon icon="ext:cube3dline" class="h-6 w-6"></i-icon>
-          About
-          <i-icon icon="ext:downfill" class="w-5 fill-current" />
-        </label>
+          <span class="hidden font-normal md:inline">相关</span>
+          <i-icon icon="ext:downfill" class="hidden w-5 fill-current sm:inline-block" />
+        </div>
         <ul tabindex="0" class="menu dropdown-content z-[1] p-2 shadow-xl bg-base-100 rounded-box w-52 mt-4">
           <li v-for="lib of acknowledgments" :key="lib.name">
             <a :href="lib.link" target="_blank" referrerpolicy="no-referrer" class="flex flex-row">
@@ -94,9 +93,11 @@ function toggleTheme(theme: string) {
         </ul>
       </div>
 
-      <a class="btn btn-ghost" :href="homepage" target="_blank" referrerpolicy="no-referrer">
-        <i-icon icon="ext:github" class="h-6 w-6"></i-icon>
-      </a>
+      <div class="tooltip tooltip-bottom" data-tip="Github">
+        <a class="btn btn-ghost" :href="homepage" target="_blank" referrerpolicy="no-referrer">
+          <i-icon icon="ext:github" class="h-6 w-6"></i-icon>
+        </a>
+      </div>
     </div>
   </div>
 </template>
