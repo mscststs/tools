@@ -2,7 +2,7 @@
 
 import { ref, watchEffect } from "vue";
 import QrScanner from 'qr-scanner';
-// import { usePermission } from "@vueuse/core";
+import { useClipboard } from "@vueuse/core";
 import startCapture from "./capture";
 
 /**
@@ -18,6 +18,11 @@ const imgRef = ref();
 const supportClipBoard = !!navigator?.clipboard?.read ?? false;
 const supportGetUserMedia = !!navigator?.mediaDevices?.getUserMedia ?? false;
 const supportGetDisplayMedia = !!navigator?.mediaDevices?.getUserMedia ?? false;
+
+const { copy, copied } = useClipboard({
+  source: result,
+  legacy: true
+});
 
 
 
@@ -146,7 +151,7 @@ watchEffect(async () => {
 
       <div class="line py-4  flex justify-center 2xl:justify-start" v-show="imgSrc">
         <img :src="imgSrc" alt="" :ref="imgRef"
-          class="max-w-full max-h-[400px] sm:max-w-[600px] object-contain border-neutral-50 shadow hover:shadow-lg transition-shadow border-[1px]">
+          class="max-w-full max-h-[400px] sm:max-w-[600px] object-contain border-primary shadow hover:shadow-lg transition-shadow border-[1px]">
       </div>
     </div>
     <div class="divider divider-horizontal hidden 2xl:flex"></div>
@@ -157,6 +162,11 @@ watchEffect(async () => {
         <div class="form-control w-full sm:w-[600px]">
           <label class="label">
             <span class="label-text">识别结果</span>
+            <span class="label-text-alt cursor-pointer hover:font-bold" v-if="result" @click="copy(result)">
+              <i-icon icon="ext:success" class="inline" v-if="copied"></i-icon>
+              <i-icon icon="ext:clipboard" class="inline" v-else></i-icon>
+
+              复制</span>
           </label>
           <textarea class="textarea textarea-bordered h-24 w-full" v-model="result" readonly></textarea>
         </div>
