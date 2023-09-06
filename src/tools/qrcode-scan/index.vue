@@ -62,7 +62,7 @@ async function handleReadDisplay() {
 }
 async function handleReadUserMedia() {
   const mediaStream = await navigator.mediaDevices.getUserMedia({
-    video: true,
+    video: { facingMode: "environment" }, // 优先使用后置摄像头
     audio: false,
   });
   try {
