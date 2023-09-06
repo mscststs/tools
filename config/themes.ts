@@ -1,15 +1,21 @@
+import daisy from "daisyui/src/theming/themes";
+
 const themes = [
   {
     lite: {
       primary: "#3955cb",
+      "primary-content": "#fff",
       secondary: "#5abf99",
       accent: "#e59d59",
       neutral: "#271a2e",
       "base-100": "#fcfcfc",
       info: "#232b35",
       success: "#55ac68",
+      "success-content": "#fff",
       warning: "#e5ac49",
+      "warning-content": "#fff",
       error: "#f34939",
+      "error-content": "#fff",
       "--rounded-box": "0.25rem",
       "--rounded-btn": ".25rem",
       "--rounded-badge": ".125rem",
@@ -17,8 +23,12 @@ const themes = [
       "--tab-border": "1px",
       "--tab-radius": "0.5rem",
     },
+    business: {
+      ...daisy["[data-theme=business]"],
+      "--rounded-box": "0.125rem",
+    },
   },
-  "business",
+  // "business",
   "light",
   "dark",
   "cupcake",

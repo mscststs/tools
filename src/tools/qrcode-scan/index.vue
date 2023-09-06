@@ -28,6 +28,24 @@ const { copy, copied } = useClipboard({
 });
 
 
+async function handleReadPaste(e: ClipboardEvent) {
+  if (e?.clipboardData?.items) {
+    const image = [...e?.clipboardData?.items].find(item => {
+      return item.kind === "file" && item.type.startsWith("image/")
+    });
+    if (image) {
+      const imageFile = image?.getAsFile();
+      if (imageFile) {
+
+        const blob = new Blob([imageFile], { type: image.type || 'application/*' })
+        const dataUrl = window.URL.createObjectURL(blob)
+        imgSrc.value = dataUrl;
+      }
+    } else {
+      error("不支持的格式");
+    }
+  }
+}
 
 async function handleReadDrop(event: DragEvent) {
   event.preventDefault();
@@ -147,7 +165,7 @@ watchEffect(async () => {
 </script>
 
 <template>
-  <div class="flex flex-col w-full 2xl:flex-row" @drop="handleReadDrop" @dragover.prevent>
+  <div class="flex flex-col w-full 2xl:flex-row" @drop="handleReadDrop" @dragover.prevent @paste="handleReadPaste">
     <div class="left flex flex-col flex-auto w-full 2xl:w-0.5">
       <div class="line py-4 flex flex-row gap-2 flex-wrap justify-start sm:justify-center 2xl:justify-start">
         <button type="button" class="btn btn-primary" @click="handleReadClipboard" v-if="supportClipBoard"
