@@ -2,8 +2,9 @@
 
 import { ref, watchEffect } from "vue";
 import QrScanner from 'qr-scanner';
-import { useClipboard } from "@vueuse/core";
+import { useClipboard, usePermission } from "@vueuse/core";
 import startCapture from "./capture";
+import { error } from "../../components/message"
 
 /**
  * 识别结果
@@ -17,10 +18,12 @@ const imgRef = ref();
 
 const supportClipBoard = !!navigator?.clipboard?.read ?? false;
 const supportGetUserMedia = !!navigator?.mediaDevices?.getUserMedia ?? false;
-const supportGetDisplayMedia = !!navigator?.mediaDevices?.getUserMedia ?? false;
+const supportGetDisplayMedia = !!navigator?.mediaDevices?.getDisplayMedia ?? false;
+
+const accessClipboard = usePermission("clipboard-read");
+const accessGetUserMedia = usePermission("camera");
 
 const { copy, copied } = useClipboard({
-  source: result,
   legacy: true
 });
 
@@ -41,37 +44,48 @@ async function handleReadDrop(event: DragEvent) {
         const dataUrl = window.URL.createObjectURL(blob)
         imgSrc.value = dataUrl;
       }
+    } else {
+      error("不支持的格式");
     }
   }
 
 }
 
 async function handleReadDisplay() {
-  const mediaStream = await navigator.mediaDevices.getDisplayMedia({
-    video: true,
-    audio: false,
-  });
   try {
-    let dataUrl = await startCapture(mediaStream);
-    imgSrc.value = dataUrl;
-  } catch (e) {
-    console.error(e);
-  } finally {
-    mediaStream.getTracks().forEach(track => track.stop())
+    const mediaStream = await navigator.mediaDevices.getDisplayMedia({
+      video: true,
+      audio: false,
+    });
+    try {
+      let dataUrl = await startCapture(mediaStream);
+      imgSrc.value = dataUrl;
+    } catch (e: any) {
+      console.error(e);
+    } finally {
+      mediaStream.getTracks().forEach(track => track.stop())
+    }
+  } catch (e: any) {
+    error(e);
   }
+
 }
 async function handleReadUserMedia() {
-  const mediaStream = await navigator.mediaDevices.getUserMedia({
-    video: { facingMode: "environment" }, // 优先使用后置摄像头
-    audio: false,
-  });
   try {
-    let dataUrl = await startCapture(mediaStream);
-    imgSrc.value = dataUrl;
-  } catch (e) {
-    console.error(e);
-  } finally {
-    mediaStream.getTracks().forEach(track => track.stop())
+    const mediaStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "environment" }, // 优先使用后置摄像头
+      audio: false,
+    });
+    try {
+      let dataUrl = await startCapture(mediaStream);
+      imgSrc.value = dataUrl;
+    } catch (e: any) {
+      console.error(e);
+    } finally {
+      mediaStream.getTracks().forEach(track => track.stop())
+    }
+  } catch (e: any) {
+    error(e);
   }
 }
 
@@ -88,6 +102,7 @@ async function handleReadFile(event: Event) {
       target.value = "";
 
     } else {
+      error("不支持的格式")
       throw new Error("Format Not support");
     }
   }
@@ -105,7 +120,8 @@ async function handleReadClipboard() {
 
       imgSrc.value = dataUrl;
     }
-  } catch (e) {
+  } catch (e: any) {
+    error(e);
     console.error(e);
   }
 }
@@ -118,7 +134,8 @@ watchEffect(async () => {
         alsoTryWithoutScanRegion: true,
       });
       result.value = res;
-    } catch (e) {
+    } catch (e: any) {
+      error(e);
       console.error(e);
     }
   }
@@ -133,7 +150,8 @@ watchEffect(async () => {
   <div class="flex flex-col w-full 2xl:flex-row" @drop="handleReadDrop" @dragover.prevent>
     <div class="left flex flex-col flex-auto w-full 2xl:w-0.5">
       <div class="line py-4 flex flex-row gap-2 flex-wrap justify-start sm:justify-center 2xl:justify-start">
-        <button type="button" class="btn btn-primary" @click="handleReadClipboard" v-if="supportClipBoard">
+        <button type="button" class="btn btn-primary" @click="handleReadClipboard" v-if="supportClipBoard"
+          :disabled="accessClipboard === 'denied'">
           从剪贴板识别
         </button>
         <label class="btn btn-primary">
@@ -144,7 +162,8 @@ watchEffect(async () => {
           从屏幕识别
         </button>
 
-        <button type="button" class="btn btn-primary" @click="handleReadUserMedia" v-if="supportGetUserMedia">
+        <button type="button" class="btn btn-primary" @click="handleReadUserMedia" v-if="supportGetUserMedia"
+          :disabled="accessGetUserMedia === 'denied'">
           从相机识别
         </button>
       </div>
