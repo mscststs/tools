@@ -205,7 +205,7 @@ watchEffect(async () => {
 
               复制</span>
           </label>
-          <textarea class="textarea textarea-bordered h-24 w-full" v-model="result" readonly></textarea>
+          <textarea class="textarea textarea-bordered h-24 w-full" v-model="result" readonly v-fakefocus></textarea>
         </div>
       </div>
     </div>

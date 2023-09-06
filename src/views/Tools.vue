@@ -4,5 +4,7 @@ import { RouterView } from 'vue-router';
 </script>
 
 <template>
-  <router-view></router-view>
+  <div class="plugin-container flex flex-auto">
+    <router-view></router-view>
+  </div>
 </template>
