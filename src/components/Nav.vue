@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { homepage } from "../../package.json";
-import themes from "../../config/themes";
+import { themeNames } from "../../config/themes";
 import acknowledgments from "../../config/acknowledgments"
 import { useLocalStorage } from "@vueuse/core";
 import { watchEffect } from "vue";
@@ -31,7 +31,7 @@ function toggleTheme(theme: string) {
 </script>
 
 <template>
-  <div class="navbar backdrop-blur-xl px-6 gap-2 shadow">
+  <div class="navbar backdrop-blur-2xl px-6 gap-2 shadow">
     <div class="flex-none">
       <router-link to="/" class="btn btn-ghost normal-case text-xl">
         <i-icon icon="ext:tools"></i-icon>
@@ -52,8 +52,8 @@ function toggleTheme(theme: string) {
         <div tabindex="0"
           class="menu dropdown-content z-[1] p-2 shadow-xl bg-base-100 rounded-box w-52 mt-4 max-h-96 overflow-y-auto">
           <div class="grid grid-cols-1 gap-3" tabindex="0">
-            <button v-for="theme of themes" :key="theme" class="outline-base-content overflow-hidden rounded-lg text-left"
-              @click="toggleTheme(theme)">
+            <button v-for="theme of themeNames" :key="theme"
+              class="outline-base-content overflow-hidden rounded-lg text-left" @click="toggleTheme(theme)">
               <div :data-theme="theme" class="bg-base-100 text-base-content w-full cursor-pointer font-sans">
                 <div class="grid grid-cols-5 grid-rows-3">
                   <div class="col-span-5 row-span-3 row-start-1 flex items-center gap-2 px-4 py-3">

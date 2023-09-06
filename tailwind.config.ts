@@ -11,6 +11,7 @@ export default {
   },
   daisyui: {
     themes: themes,
+    darkTheme: "business",
   },
   plugins: [require("daisyui")],
 } satisfies Config;

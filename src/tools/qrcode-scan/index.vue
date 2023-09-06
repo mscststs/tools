@@ -128,18 +128,18 @@ watchEffect(async () => {
   <div class="flex flex-col w-full 2xl:flex-row" @drop="handleReadDrop" @dragover.prevent>
     <div class="left flex flex-col flex-auto w-full 2xl:w-0.5">
       <div class="line py-4 flex flex-row gap-2 flex-wrap justify-start sm:justify-center 2xl:justify-start">
-        <button type="button" class="btn btn-neutral" @click="handleReadClipboard" v-if="supportClipBoard">
+        <button type="button" class="btn btn-primary" @click="handleReadClipboard" v-if="supportClipBoard">
           从剪贴板识别
         </button>
-        <label class="btn btn-neutral">
+        <label class="btn btn-primary">
           <span>从文件识别</span>
           <input type="file" class="hidden" @change.prevent="handleReadFile" accept="image/*">
         </label>
-        <button type="button" class="btn btn-neutral" @click="handleReadDisplay" v-if="supportGetDisplayMedia">
+        <button type="button" class="btn btn-primary" @click="handleReadDisplay" v-if="supportGetDisplayMedia">
           从屏幕识别
         </button>
 
-        <button type="button" class="btn btn-neutral" @click="handleReadUserMedia" v-if="supportGetUserMedia">
+        <button type="button" class="btn btn-primary" @click="handleReadUserMedia" v-if="supportGetUserMedia">
           从相机识别
         </button>
       </div>
