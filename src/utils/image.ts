@@ -5,7 +5,7 @@ export const getImage = async (url: string): Promise<HTMLImageElement> => {
     imageNode.onload = () => {
       resolve(imageNode);
     };
-    imageNode.crossOrigin = "anonymous";
+    // imageNode.crossOrigin = "include";
     let targetUrl = url;
     if (url.startsWith("http://")) {
       targetUrl = `https://image.baidu.com/search/down?url=${targetUrl}`;
