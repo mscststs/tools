@@ -6,6 +6,10 @@ export const getImage = async (url: string): Promise<HTMLImageElement> => {
       resolve(imageNode);
     };
     imageNode.crossOrigin = "anonymous";
-    imageNode.src = url;
+    let targetUrl = url;
+    if (url.startsWith("http://")) {
+      targetUrl = `https://image.baidu.com/search/down?url=${targetUrl}`;
+    }
+    imageNode.src = targetUrl;
   });
 };
