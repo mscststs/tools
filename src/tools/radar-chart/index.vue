@@ -29,6 +29,7 @@ function getTimeVariables(date: Date) {
 const form = reactive({
   selectArea: mmcRadar[0].name,
   selectDuration: 3 * 60 * 60 * 1000,
+  selectedProxy: "https://image.baidu.com/search/down?url="
 });
 
 const selectArea = computed<UrlTemplate | null>(() => {
@@ -78,16 +79,16 @@ const loadedSeq = computed(() => {
   })
 });
 
-let loading = false;
-let recording = false;
+let loading = ref(false);
+let recording = ref(false);
 /**
  * 创建序列并加载图片
  */
 async function createSequence() {
-  if (loading) {
-    loading = false;
+  if (loading.value) {
+    loading.value = false;
   } else {
-    loading = true;
+    loading.value = true;
     try {
       if (!selectArea.value) {
         return;
@@ -97,10 +98,10 @@ async function createSequence() {
 
       currentView.value = seqs.value[seqs.value.length - 1].ts.toString();
       for (let i = seqs.value.length - 1; i >= 0; i--) {
-        if (!loading) {
+        if (!loading.value) {
           break; // 中断加载
         }
-        const imageElement = await getImage(seqs.value[i].url);
+        const imageElement = await getImage(seqs.value[i].url, form.selectedProxy);
         seqs.value[i].status = "loaded";
         seqs.value[i].node = imageElement;
         // console.log("loaded:", imageElement);
@@ -110,7 +111,7 @@ async function createSequence() {
         error(e)
       }
     } finally {
-      loading = false;
+      loading.value = false;
     }
   }
 };
@@ -147,10 +148,10 @@ function download(chunks: any) {
 }
 
 async function record() {
-  if (recording) {
-    recording = false;
+  if (recording.value) {
+    recording.value = false;
   } else {
-    recording = true;
+    recording.value = true;
     try {
       const canvas = ImageCanvas.value;
       const stream = canvas.captureStream(60);
@@ -176,7 +177,7 @@ async function record() {
       let index = 0;
       currentView.value = loadedSeq.value[index].ts.toString();
       mediaRecorder.start();
-      while (recording && (parseInt(currentView.value) < loadedSeq.value[loadedSeq.value.length - 1].ts)) {
+      while (recording.value && (parseInt(currentView.value) < loadedSeq.value[loadedSeq.value.length - 1].ts)) {
         await sleep(30)
         index += 1;
         currentView.value = loadedSeq.value[index].ts.toString();
@@ -189,7 +190,7 @@ async function record() {
       }
 
     } finally {
-      recording = false;
+      recording.value = false;
     }
   }
 }
@@ -212,6 +213,11 @@ async function record() {
         <option :value="3 * 24 * 60 * 60 * 1000">3d</option>
         <option :value="7 * 24 * 60 * 60 * 1000">7d</option>
         <option :value="15 * 24 * 60 * 60 * 1000">15d</option>
+      </select>
+      <select class="select select-primary" v-model="form.selectedProxy">
+        <option value="">不使用图片代理（不支持 HTTPS ）</option>
+        <option value="https://image.baidu.com/search/down?url=">百度图片代理（不支持录制）</option>
+        <option value="https://wsrv.nl/?url=">wsrv.nl（不稳定）</option>
       </select>
       <button class="btn btn-primary" @click="createSequence" :disabled="recording">
         <template v-if="loading">

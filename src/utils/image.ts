@@ -10,7 +10,7 @@ const memoryCache: {
  *
  */
 
-export const getImage = async (url: string): Promise<HTMLImageElement> => {
+export const getImage = async (url: string, proxy?: string): Promise<HTMLImageElement> => {
   return new Promise((resolve, reject) => {
     if (memoryCache[url]) {
       resolve(memoryCache[url]);
@@ -23,10 +23,13 @@ export const getImage = async (url: string): Promise<HTMLImageElement> => {
       memoryCache[url] = imageNode;
       resolve(imageNode);
     };
-    // imageNode.crossOrigin = "include";
     let targetUrl = url;
-    if (url.startsWith("http://")) {
-      targetUrl = `https://image.baidu.com/search/down?url=${targetUrl}`;
+    if (proxy) {
+      targetUrl = proxy + targetUrl;
+      if (~proxy.indexOf("baidu")) {
+      } else {
+        imageNode.crossOrigin = "anonymous";
+      }
     }
     imageNode.src = targetUrl;
   });
