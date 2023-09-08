@@ -154,12 +154,12 @@ async function record() {
     recording.value = true;
     try {
       const canvas = ImageCanvas.value;
-      const stream = canvas.captureStream(60);
+      const stream = canvas.captureStream(30);
       const recordedChunks: any[] = [];
 
       const options = {
         mimeType: "video/webm",
-        videoBitsPerSecond: 15000000, // 15M
+        videoBitsPerSecond: 150000000, // 15M
       };
       const mediaRecorder = new MediaRecorder(stream, options);
       mediaRecorder.ondataavailable = handleDataAvailable;
