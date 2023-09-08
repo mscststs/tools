@@ -24,11 +24,12 @@ export const getImage = async (url: string, proxy?: string): Promise<HTMLImageEl
       resolve(imageNode);
     };
     let targetUrl = url;
+    imageNode.crossOrigin = "anonymous";
     if (proxy) {
       targetUrl = proxy + targetUrl;
       if (~proxy.indexOf("baidu")) {
+        imageNode.crossOrigin = null;
       } else {
-        imageNode.crossOrigin = "anonymous";
       }
     }
     imageNode.src = targetUrl;
