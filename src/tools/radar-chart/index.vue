@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect, reactive } from "vue";
 import { error } from "../../components/message";
-import { getImage, formatTime, sleep } from "../../utils";
+import { getImage, formatTime, sleep, createBlob, downloadBlob } from "../../utils";
 import { mmcRadar } from "./data.ts";
+import prompt from "./recorder-prompt.tsx";
+import jsZip from "jszip"
 
 
 function getTimeVariables(date: Date) {
@@ -131,20 +133,38 @@ watchEffect(() => {
     }
   }
 });
+const zipLoading = ref(false);
 
-
-function download(chunks: any) {
-  const blob = new Blob(chunks, {
-    type: "video/webm",
-  });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  document.body.appendChild(a);
-  a.className = "hidden";
-  a.href = url;
-  a.download = `RadarRecord_${selectArea.value?.name ?? ['未知']}_${formatTime()}_.webm`;
-  a.click();
-  window.URL.revokeObjectURL(url);
+async function zipDownload() {
+  zipLoading.value = true;
+  try {
+    const zip = new jsZip();
+    if (!loadedArea.value) {
+      return
+    }
+    const folder = zip.folder(loadedArea.value.name);
+    if (!folder) {
+      throw new Error("创建Zip归档失败")
+    }
+    for (let item of loadedSeq.value) {
+      if (!zipLoading) {
+        break;
+      }
+      if (item.node) {
+        const blob = await createBlob(item.node);
+        folder.file(`${formatTime(new Date(item.ts))}.png`, blob, { binary: true });
+      }
+    }
+    zip.generateAsync({ type: "blob" }).then(function (content) {
+      downloadBlob(content, `RadarPack_${selectArea.value?.name ?? ['未知']}_${formatTime()}.zip`)
+    });
+  } catch (e) {
+    if (e instanceof Error) {
+      error(e)
+    }
+  } finally {
+    zipLoading.value = false;
+  }
 }
 
 async function record() {
@@ -157,20 +177,20 @@ async function record() {
       const stream = canvas.captureStream(30);
       const recordedChunks: any[] = [];
 
-      const options = {
-        mimeType: "video/webm",
-        videoBitsPerSecond: 150000000, // 15M
-      };
+      // console.log("prompt", await prompt());
+      const options = await prompt();
       const mediaRecorder = new MediaRecorder(stream, options);
       mediaRecorder.ondataavailable = handleDataAvailable;
       function handleDataAvailable(event: any) {
         if (event.data.size > 0) {
           recordedChunks.push(event.data);
-          // console.log(recordedChunks);
-          download(recordedChunks);
+          const blob = new Blob(recordedChunks, {
+            type: "video/webm",
+          });
+          downloadBlob(blob, `RadarRecord_${selectArea.value?.name ?? ['未知']}_${formatTime()}.webm`)
         } else {
-          // …
-          console.error("???");
+          error("编码出错");
+          console.error(event);
         }
       }
 
@@ -248,7 +268,17 @@ async function record() {
           </template>
           <template v-else>
             录制
-          </template></button>
+          </template>
+        </button>
+        <button type="button" class="btn btn-primary" @click="zipDownload">
+          <template v-if="zipLoading">
+            <span class="loading loading-spinner"></span>
+            打包中
+          </template>
+          <template v-else>
+            归档下载
+          </template>
+        </button>
       </div>
       <canvas ref="ImageCanvas" :height="loadedArea?.height" :width="loadedArea?.width" class="flex-none"></canvas>
     </div>

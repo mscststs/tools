@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^10.4.1",
+    "jszip": "^3.10.1",
     "qr-scanner": "^1.4.2",
     "theme-change": "^2.5.0",
     "vue": "^3.3.4",

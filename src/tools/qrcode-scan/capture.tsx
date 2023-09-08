@@ -1,4 +1,5 @@
 import { createApp, onMounted, ref } from "vue";
+import { createBlob } from "../../utils";
 
 const addElement = () => {
   const div = document.createElement("div");
@@ -35,20 +36,7 @@ const startCapture = async (mediaStream: MediaStream): Promise<string> => {
         });
 
         const getMediaCapture = async () => {
-          const canvas = document.createElement("canvas");
-          canvas.width = videoRef.value.videoWidth;
-          canvas.height = videoRef.value.videoHeight;
-          const ctx = canvas.getContext("2d");
-          ctx?.drawImage(videoRef.value, 0, 0);
-          const blob = await new Promise<Blob>((resolve, reject) => {
-            canvas.toBlob((b) => {
-              if (b) {
-                resolve(b);
-              } else {
-                reject(new Error("transform Error"));
-              }
-            });
-          });
+          const blob = await createBlob(videoRef.value);
           const dataUrl = URL.createObjectURL(blob);
           dialogRef.value.close(dataUrl);
         };
