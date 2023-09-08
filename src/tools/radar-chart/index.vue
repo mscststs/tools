@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watchEffect, reactive } from "vue";
 import { error } from "../../components/message";
 import { getImage, formatTime, sleep } from "../../utils";
 import { mmcRadar } from "./data.ts";
@@ -26,13 +26,13 @@ function getTimeVariables(date: Date) {
 }
 
 
-const form = ref({
+const form = reactive({
   selectArea: mmcRadar[0].name,
   selectDuration: 3 * 60 * 60 * 1000,
 });
 
 const selectArea = computed<UrlTemplate | null>(() => {
-  return mmcRadar.find(item => form.value.selectArea === item.name) || null;
+  return mmcRadar.find(item => form.selectArea === item.name) || null;
 });
 
 const loadedArea = ref<UrlTemplate>()
@@ -93,7 +93,7 @@ async function createSequence() {
         return;
       }
       loadedArea.value = selectArea.value;
-      seqs.value = getUrls(selectArea.value, form.value.selectDuration).reverse();
+      seqs.value = getUrls(selectArea.value, form.selectDuration).reverse();
 
       currentView.value = seqs.value[seqs.value.length - 1].ts.toString();
       for (let i = seqs.value.length - 1; i >= 0; i--) {
