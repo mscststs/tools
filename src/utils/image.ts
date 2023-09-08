@@ -12,18 +12,21 @@ const memoryCache: {
 
 export const getImage = async (url: string, proxy?: string): Promise<HTMLImageElement> => {
   return new Promise((resolve, reject) => {
-    if (memoryCache[url]) {
-      resolve(memoryCache[url]);
+    let targetUrl = url;
+    if (proxy) {
+      targetUrl = proxy + targetUrl;
+    }
+    if (memoryCache[targetUrl]) {
+      resolve(memoryCache[targetUrl]);
       return;
     }
 
     const imageNode = new Image();
     imageNode.onerror = reject;
     imageNode.onload = () => {
-      memoryCache[url] = imageNode;
+      memoryCache[targetUrl] = imageNode;
       resolve(imageNode);
     };
-    let targetUrl = url;
     imageNode.crossOrigin = "anonymous";
     if (proxy) {
       targetUrl = proxy + targetUrl;
@@ -32,6 +35,12 @@ export const getImage = async (url: string, proxy?: string): Promise<HTMLImageEl
       } else {
       }
     }
+
+    if (proxy && ~proxy.indexOf("baidu")) {
+      imageNode.crossOrigin = null;
+    } else {
+    }
+
     imageNode.src = targetUrl;
   });
 };
