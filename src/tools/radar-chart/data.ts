@@ -3,9 +3,9 @@ export const mmcRadar: UrlTemplate[] = [
     name: "全国",
     interval: 6 * 60 * 1000,
     delay: 6 * 60 * 1000 * 2,
-    width: 825,
-    height: 739,
-    url: "http://image.nmc.cn/product/${UTC_YEAR}/${UTC_MONTH}/${UTC_DATE}/RDCP/medium/SEVP_AOC_RDCP_SLDAS3_ECREF_ACHN_L88_PI_${UTC_YEAR}${UTC_MONTH}${UTC_DATE}${UTC_HOUR}${UTC_MINUTE}00000.PNG",
+    width: 1349,
+    height: 1208,
+    url: "http://image.nmc.cn/product/${UTC_YEAR}/${UTC_MONTH}/${UTC_DATE}/RDCP/SEVP_AOC_RDCP_SLDAS3_ECREF_ACHN_L88_PI_${UTC_YEAR}${UTC_MONTH}${UTC_DATE}${UTC_HOUR}${UTC_MINUTE}00000.PNG",
     offset: 0,
   },
   {
