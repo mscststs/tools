@@ -1,4 +1,4 @@
-type ToolTypes = "utils" | "transform" | "encode";
+type ToolTypes = "utils" | "transform" | "encode" | "visual";
 
 interface Tool {
   id: string;

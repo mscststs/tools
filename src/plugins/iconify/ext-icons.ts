@@ -14,6 +14,7 @@ export { default as github } from "@iconify-icons/mdi/github";
 export { default as copyleft } from "@iconify-icons/mdi/copyleft";
 export { default as qrcodescan } from "@iconify-icons/mdi/qrcode-scan";
 export { default as clipboard } from "@iconify-icons/mdi/clipboard-outline";
+export { default as radar } from "@iconify-icons/mdi/radar";
 
 // logos
 export { default as vue } from "@iconify-icons/logos/vue";

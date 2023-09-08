@@ -6,8 +6,8 @@ import tools from "../tools/";
 </script>
 
 <template>
-  <div class="font-bold flex flex-row">
-    <div class="tool-item flex flex-none" v-for="tool of tools" :key="tool.id">
+  <div class="font-bold flex flex-row gap-4 ">
+    <div class="tool-item flex flex-none " v-for="tool of tools" :key="tool.id">
       <router-link :to="{
         name: tool.id
       }" class="btn btn-primary">
