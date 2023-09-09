@@ -20,7 +20,7 @@
       }
       Object.keys(ext).forEach(key => {
         if(newHost.endsWith(key)){
-          newHost.replace(key, ext[key]);
+          newHost = newHost.replace(key, ext[key]);
         }
       });
       if(originURL.protocol === "http:"){

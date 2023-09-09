@@ -54,6 +54,7 @@ class CrossOrigin {
           func,
           params,
         }),
+        "*",
       );
     });
   }
