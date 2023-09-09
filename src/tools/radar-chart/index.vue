@@ -265,7 +265,7 @@ async function record() {
       <button class="btn btn-primary" @click="createSequence" :disabled="recording">
         <template v-if="loading">
           <span class="loading loading-spinner"></span>
-          加载中
+          加载中 {{ loadedSeq.length }} {{ "/" }} {{ seqs.length }}
         </template>
         <template v-else>
           加载
