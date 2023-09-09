@@ -11,10 +11,10 @@ const addElement = () => {
   };
 };
 
-const prompt = async (): Promise<MediaRecorderOptions> => {
+const prompt = async (): Promise<any> => {
   const { element, removeElement } = addElement();
 
-  return new Promise<MediaRecorderOptions>((resolve, reject) => {
+  return new Promise<any>((resolve, reject) => {
     const app = createApp({
       setup: () => {
         const codecsList = ["video/webm;codecs=h264", "video/webm;codecs=av1", "video/webm;codecs=vp9"];
@@ -38,9 +38,16 @@ const prompt = async (): Promise<MediaRecorderOptions> => {
           const formData = new FormData(formRef.value);
           const codecs = formData.get("codecs");
           const rate = formData.get("rate");
+          const speed = formData.get("speed");
 
           if (codecs && rate) {
-            dialogRef.value.close(JSON.stringify({ mimeType: codecs, videoBitsPerSecond: rate }));
+            dialogRef.value.close(
+              JSON.stringify({
+                mimeType: codecs,
+                videoBitsPerSecond: rate,
+                speed,
+              }),
+            );
           } else {
             dialogRef.value.close();
           }
@@ -52,6 +59,17 @@ const prompt = async (): Promise<MediaRecorderOptions> => {
               <div class="modal-box ">
                 <h3 class="font-bold text-lg pb-4">选择编码器和码率</h3>
                 <div class="form-control flex-col flex gap-4">
+                  <select class="select select-primary max-w-xs" name="speed" required>
+                    <option disabled>播放速度</option>
+                    <option value="1000">1</option>
+                    <option value="500">2</option>
+                    <option value="200">5</option>
+                    <option value="100" selected>
+                      10
+                    </option>
+                    <option value="50">20</option>
+                    <option value="33">30</option>
+                  </select>
                   <select class="select select-primary max-w-xs" name="codecs" required>
                     <option disabled selected>
                       编码器
@@ -67,13 +85,14 @@ const prompt = async (): Promise<MediaRecorderOptions> => {
 
                   <select class="select select-primary max-w-xs" name="rate" required>
                     <option disabled>码率</option>
-                    <option value="10000000">10M</option>
-                    <option value="15000000">15M</option>
-                    <option value="20000000">20M</option>
-                    <option value="100000000" selected>
-                      100M
+                    <option value="41943040">5M</option>
+                    <option value="83886080">10M</option>
+                    <option value="125829120" selected>
+                      15M
                     </option>
-                    <option value="200000000">200M</option>
+                    <option value="167772160">20M</option>
+                    <option value="209715200">25M</option>
+                    <option value="335544320">40M</option>
                   </select>
                 </div>
                 <div class="modal-action">

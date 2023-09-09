@@ -177,20 +177,24 @@ async function record() {
       const stream = canvas.captureStream(30);
       const recordedChunks: any[] = [];
 
-      // console.log("prompt", await prompt());
-      const options = await prompt();
-      const mediaRecorder = new MediaRecorder(stream, options);
-      mediaRecorder.ondataavailable = handleDataAvailable;
-      function handleDataAvailable(event: any) {
-        if (event.data.size > 0) {
+      const { mimeType, videoBitsPerSecond, speed } = await prompt();
+
+      const mediaRecorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond });
+      mediaRecorder.ondataavailable = (event: any) => {
+        if (event.data.size) {
           recordedChunks.push(event.data);
+        }
+      };
+      mediaRecorder.onerror = (event: any) => {
+        error(event.error as Error)
+        recording.value = false;
+      }
+      mediaRecorder.onstop = () => {
+        if (recordedChunks.length) {
           const blob = new Blob(recordedChunks, {
             type: "video/webm",
           });
           downloadBlob(blob, `RadarRecord_${selectArea.value?.name ?? ['未知']}_${formatTime()}.webm`)
-        } else {
-          error("编码出错");
-          console.error(event);
         }
       }
 
@@ -198,9 +202,10 @@ async function record() {
       currentView.value = loadedSeq.value[index].ts.toString();
       mediaRecorder.start();
       while (recording.value && (parseInt(currentView.value) < loadedSeq.value[loadedSeq.value.length - 1].ts)) {
-        await sleep(30)
+        await sleep(speed)
         index += 1;
         currentView.value = loadedSeq.value[index].ts.toString();
+        mediaRecorder.requestData();
       }
 
       mediaRecorder.stop();
@@ -236,9 +241,9 @@ async function record() {
       </select>
       <select class="select select-primary" v-model="form.selectedProxy">
         <option value="crossOrigin">线路1</option>
-        <option value="">不使用（不支持 HTTPS）</option>
-        <option value="baidu">百度（不支持录制和下载）</option>
-        <option value="wsrv">wsrv.nl（不稳定）</option>
+        <option value="baidu">线路2：百度（不支持录制和下载）</option>
+        <option value="wsrv">线路3：wsrv.nl（不稳定）</option>
+        <option value="">线路4：原始地址（不支持 HTTPS）</option>
       </select>
       <button class="btn btn-primary" @click="createSequence" :disabled="recording">
         <template v-if="loading">
@@ -271,7 +276,7 @@ async function record() {
             录制
           </template>
         </button>
-        <button type="button" class="btn btn-primary" @click="zipDownload">
+        <button type="button" class="btn btn-primary" :disabled="loading" @click="zipDownload">
           <template v-if="zipLoading">
             <span class="loading loading-spinner"></span>
             打包中
