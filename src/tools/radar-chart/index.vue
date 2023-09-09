@@ -31,7 +31,7 @@ function getTimeVariables(date: Date) {
 const form = reactive({
   selectArea: mmcRadar[0].name,
   selectDuration: 3 * 60 * 60 * 1000,
-  selectedProxy: "https://image.baidu.com/search/down?url="
+  selectedProxy: "crossOrigin"
 });
 
 const selectArea = computed<UrlTemplate | null>(() => {
@@ -235,9 +235,10 @@ async function record() {
         <option :value="15 * 24 * 60 * 60 * 1000">15d</option>
       </select>
       <select class="select select-primary" v-model="form.selectedProxy">
-        <option value="">不使用图片代理（不支持 HTTPS ）</option>
-        <option value="https://image.baidu.com/search/down?url=">百度图片代理（不支持录制）</option>
-        <option value="https://wsrv.nl/?url=">wsrv.nl（不稳定）</option>
+        <option value="crossOrigin">线路1</option>
+        <option value="">不使用（不支持 HTTPS）</option>
+        <option value="baidu">百度（不支持录制和下载）</option>
+        <option value="wsrv">wsrv.nl（不稳定）</option>
       </select>
       <button class="btn btn-primary" @click="createSequence" :disabled="recording">
         <template v-if="loading">

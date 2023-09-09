@@ -1,3 +1,5 @@
+import getCrossOrigin from "./crossOrigin";
+
 const memoryCache: {
   [key: string]: any;
 } = {};
@@ -10,37 +12,58 @@ const memoryCache: {
  *
  */
 
-export const getImage = async (url: string, proxy?: string): Promise<HTMLImageElement> => {
+/**
+ * 当前网页直发请求
+ * @param url
+ * @param crossOrigin
+ * @returns
+ */
+const noProxy = async (url: string, crossOrigin?: HTMLImageElement["crossOrigin"]): Promise<HTMLImageElement> => {
   return new Promise((resolve, reject) => {
-    let targetUrl = url;
-    if (proxy) {
-      targetUrl = proxy + targetUrl;
-    }
-    if (memoryCache[targetUrl]) {
-      resolve(memoryCache[targetUrl]);
+    if (memoryCache[url]) {
+      resolve(memoryCache[url]);
       return;
     }
 
     const imageNode = new Image();
     imageNode.onerror = reject;
     imageNode.onload = () => {
-      memoryCache[targetUrl] = imageNode;
+      memoryCache[url] = imageNode;
       resolve(imageNode);
     };
-    imageNode.crossOrigin = "anonymous";
-    if (proxy) {
-      targetUrl = proxy + targetUrl;
-      if (~proxy.indexOf("baidu")) {
-        imageNode.crossOrigin = null;
-      } else {
-      }
-    }
 
-    if (proxy && ~proxy.indexOf("baidu")) {
-      imageNode.crossOrigin = null;
-    } else {
+    if (crossOrigin) {
+      imageNode.crossOrigin = crossOrigin;
     }
-
-    imageNode.src = targetUrl;
+    imageNode.src = url;
   });
+};
+
+const baiduProxy = (url: string) => {
+  return noProxy(`https://image.baidu.com/search/down?url=${url}`);
+};
+
+const wsrvProxy = async (url: string) => {
+  return noProxy(`https://wsrv.nl/?url=${url}`);
+};
+
+const crossOriginProxy = async (url: string) => {
+  const co = await getCrossOrigin();
+  const data = (await co.call("fetch", {
+    url,
+  })) as string;
+  return await noProxy(data);
+};
+
+export const getImage = async (url: string, proxy: string): Promise<HTMLImageElement> => {
+  if (proxy === "baidu") {
+    return await baiduProxy(url);
+  }
+  if (proxy === "wsrv") {
+    return await wsrvProxy(url);
+  }
+  if (proxy === "crossOrigin") {
+    return await crossOriginProxy(url);
+  }
+  return await noProxy(url, "anonymous");
 };
