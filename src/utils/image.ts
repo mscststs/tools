@@ -47,6 +47,13 @@ const wsrvProxy = async (url: string) => {
   return noProxy(`https://wsrv.nl/?url=${url}`);
 };
 
+const mscNmcProxy = async (url: string) => {
+  const u = new URL(url);
+  u.host = "nmc-image.guangzhou-cvm.mscststs.com";
+  u.protocol = "https:";
+  return noProxy(u.href);
+};
+
 const crossOriginProxy = async (url: string) => {
   const co = await getCrossOrigin();
   const blob = (await co.call("fetch", {
@@ -57,6 +64,9 @@ const crossOriginProxy = async (url: string) => {
 };
 
 export const getImage = async (url: string, proxy: string): Promise<HTMLImageElement> => {
+  if (proxy === "mscnmc") {
+    return await mscNmcProxy(url);
+  }
   if (proxy === "baidu") {
     return await baiduProxy(url);
   }

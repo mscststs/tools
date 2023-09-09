@@ -261,6 +261,7 @@ async function record() {
         <option value="baidu">线路2：百度（不支持录制和下载）</option>
         <option value="wsrv">线路3：wsrv.nl（不稳定）</option>
         <option value="">线路4：原始地址（不支持 HTTPS）</option>
+        <option value="mscnmc">线路5：非常慢</option>
       </select>
       <button class="btn btn-primary" @click="createSequence" :disabled="recording">
         <template v-if="loading">

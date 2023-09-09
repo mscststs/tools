@@ -1,7 +1,7 @@
 class CrossOrigin {
   private loaded = false;
   private iframe = document.createElement("iframe");
-  private iframeSrc = "//org.ssl.6aas.cn.proxy.fbi-warning.eu.org/crossOrigin.html";
+  private iframeSrc = "https://org.ssl.6aas.cn.proxy.fbi-warning.eu.org/crossOrigin";
 
   call(func: string, params?: object) {
     return new Promise((resolve, reject) => {

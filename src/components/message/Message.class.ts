@@ -24,7 +24,7 @@ class Message {
   }
 
   async showMessage(options: MessageType) {
-    options.duration = options.duration || 3000;
+    options.duration = options.duration || 6000;
 
     const msgInstance = document.createElement("div");
     msgInstance.className = classNames[options.type];
