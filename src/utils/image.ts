@@ -49,10 +49,11 @@ const wsrvProxy = async (url: string) => {
 
 const crossOriginProxy = async (url: string) => {
   const co = await getCrossOrigin();
-  const data = (await co.call("fetch", {
+  const blob = (await co.call("fetch", {
     url,
-  })) as string;
-  return await noProxy(data);
+  })) as Blob;
+  const target = URL.createObjectURL(blob);
+  return await noProxy(target);
 };
 
 export const getImage = async (url: string, proxy: string): Promise<HTMLImageElement> => {

@@ -2,59 +2,28 @@ class CrossOrigin {
   private loaded = false;
   private iframe = document.createElement("iframe");
   private iframeSrc = "//org.ssl.6aas.cn.proxy.fbi-warning.eu.org/crossOrigin.html";
-  private rpcList: {
-    [key: string]: {
-      resolve: Function;
-      reject: Function;
-      func: string;
-      params?: Object;
-    };
-  } = {};
-
-  constructor() {
-    this.listen();
-  }
-
-  handleResolve(id: string, data: any) {
-    if (this.rpcList[id]) {
-      this.rpcList[id].resolve(data);
-    }
-  }
-  handleReject(id: string, data: string) {
-    if (this.rpcList[id]) {
-      this.rpcList[id].reject(new Error(data));
-    }
-  }
-
-  listen() {
-    window.addEventListener("message", (event) => {
-      const struct = JSON.parse(event.data);
-      const { id, type, data } = struct;
-      if (type === "rpc-resolve") {
-        this.handleResolve(id, data);
-      } else if (type === "rpc-reject") {
-        this.handleReject(id, data);
-      }
-    });
-  }
 
   call(func: string, params?: object) {
-    const id = Date.now() + Math.random();
     return new Promise((resolve, reject) => {
-      this.rpcList[id] = {
-        resolve,
-        reject,
-        func,
-        params,
+      const channel = new MessageChannel();
+
+      channel.port1.onmessage = (event) => {
+        const struct = event.data;
+        const { type, data } = struct;
+        if (type === "rpc-resolve") {
+          resolve(data);
+        } else if (type === "rpc-reject") {
+          reject(new Error(data));
+        }
       };
       this.iframe?.contentWindow?.postMessage(
-        JSON.stringify({
-          id,
+        {
           type: "rpc-call",
           func,
           params,
-        }),
+        },
         "*",
+        [channel.port2],
       );
     });
   }

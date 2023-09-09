@@ -44,43 +44,28 @@
         const response = await fetch(changeURL(url), options);
         const blob = await response.blob();
         
-        let base64 = new Promise((resolve, reject) => {
-          const fileReader = new FileReader();
-          fileReader.onload = (e) => {
-            resolve(e.target.result);
-          };
-          // readAsDataURL
-          fileReader.readAsDataURL(blob);
-          fileReader.onerror = () => {
-            reject(new Error('blobToBase64 error'));
-          };
-        });
-        return base64
+        return {data: blob, transfer: blob};
       }
     }
 
 
     window.addEventListener("message", async (event)=>{
-      const struct = JSON.parse(event.data);
-      const {id, type, func, params} = struct;
+      const struct = event.data;
+      const port2 = event.ports[0]
+      const {type, func, params} = struct;
       if(type === "rpc-call"){
         try{
-
-          const data = await rpcFuncs[func](params);
-
-          parent.postMessage(JSON.stringify({
-            id: id,
+          const {data,transfer} = await rpcFuncs[func](params);
+          port2.postMessage({
             type: "rpc-resolve",
             data: data || ""
-          }), "*" );
-
+          }, transfer);
         }catch(e){
-          console.log(e);
-          parent.postMessage(JSON.stringify({
-            id: id,
+          console.error(e);
+          port2.postMessage({
             type: "rpc-reject",
             data: e.message
-          }), "*");
+          });
 
         }
       }
