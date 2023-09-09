@@ -10,8 +10,12 @@ class BlobDonwloadManager {
     this.chunks = [];
   }
 
-  write(blob: Blob) {
-    if (blob.size) {
+  write(blob: Blob | ArrayBuffer) {
+    if (blob instanceof Blob) {
+      if (blob.size) {
+        this.chunks.push(blob);
+      }
+    } else {
       this.chunks.push(blob);
     }
   }
@@ -41,9 +45,13 @@ class StreamDownloadManager {
   }
 }
 
-export default async function createDownloadManager(filename: string, type: FilePickerAcceptType["accept"]) {
+export async function createDownloadManager(
+  filename: string,
+  type: FilePickerAcceptType["accept"],
+  allowStream?: boolean,
+) {
   const useStream = typeof window?.showSaveFilePicker === "function";
-  if (useStream) {
+  if (useStream && allowStream) {
     const fileHandle = await window?.showSaveFilePicker({
       suggestedName: filename,
       types: [{ accept: type }],

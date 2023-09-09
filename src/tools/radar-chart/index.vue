@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect, reactive } from "vue";
 import { error } from "../../components/message";
-import { getImage, formatTime, sleep, createBlob, downloadBlob } from "../../utils";
+import { getImage, formatTime, sleep, createBlob, createDownloadManager } from "../../utils";
 import { mmcRadar } from "./data.ts";
 import prompt from "./recorder-prompt.tsx";
-import jsZip from "jszip"
+// import jsZip from "jszip";
+import * as fflate from "fflate";
 
 
 function getTimeVariables(date: Date) {
@@ -138,26 +139,41 @@ const zipLoading = ref(false);
 async function zipDownload() {
   zipLoading.value = true;
   try {
-    const zip = new jsZip();
     if (!loadedArea.value) {
       return
     }
-    const folder = zip.folder(loadedArea.value.name);
-    if (!folder) {
-      throw new Error("创建Zip归档失败")
-    }
+
+    const downloadManager = await createDownloadManager(
+      `RadarPack_${selectArea.value?.name ?? ['未知']}_${formatTime()}.zip`,
+      {
+        "application/zip": ".zip"
+      },
+      true
+    );
+
+    const zip = new fflate.Zip((err, dat, final) => {
+      if (!err) {
+        downloadManager.write(dat.buffer);
+        if (final) {
+          downloadManager.close();
+        }
+      } else {
+        downloadManager.close();
+      }
+    });
     for (let item of loadedSeq.value) {
       if (!zipLoading) {
+        zip.end();
         break;
       }
       if (item.node) {
         const blob = await createBlob(item.node);
-        folder.file(`${formatTime(new Date(item.ts))}.png`, blob, { binary: true });
+        const image = new fflate.ZipDeflate(`${formatTime(new Date(item.ts))}.png`, { level: 9 });
+        zip.add(image);
+        image.push(new Uint8Array(await blob.arrayBuffer()), true);
       }
     }
-    zip.generateAsync({ type: "blob" }).then(function (content) {
-      downloadBlob(content, `RadarPack_${selectArea.value?.name ?? ['未知']}_${formatTime()}.zip`)
-    });
+    zip.end();
   } catch (e) {
     if (e instanceof Error) {
       error(e)
@@ -175,27 +191,28 @@ async function record() {
     try {
       const canvas = ImageCanvas.value;
       const stream = canvas.captureStream(30);
-      const recordedChunks: any[] = [];
+      // const recordedChunks: any[] = [];
 
       const { mimeType, videoBitsPerSecond, speed } = await prompt();
 
+      const downloadManager = await createDownloadManager(
+        `RadarRecord_${selectArea.value?.name ?? ['未知']}_${formatTime()}.webm`,
+        {
+          [mimeType.split(";")[0]]: `.${mimeType.split(";")[0].split("/")[1]}`
+        },
+        true
+      )
+
       const mediaRecorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond });
       mediaRecorder.ondataavailable = (event: any) => {
-        if (event.data.size) {
-          recordedChunks.push(event.data);
-        }
+        downloadManager.write(event.data)
       };
       mediaRecorder.onerror = (event: any) => {
         error(event.error as Error)
         recording.value = false;
       }
       mediaRecorder.onstop = () => {
-        if (recordedChunks.length) {
-          const blob = new Blob(recordedChunks, {
-            type: "video/webm",
-          });
-          downloadBlob(blob, `RadarRecord_${selectArea.value?.name ?? ['未知']}_${formatTime()}.webm`)
-        }
+        downloadManager.close()
       }
 
       let index = 0;

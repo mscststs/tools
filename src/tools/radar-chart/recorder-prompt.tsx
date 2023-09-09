@@ -17,7 +17,18 @@ const prompt = async (): Promise<any> => {
   return new Promise<any>((resolve, reject) => {
     const app = createApp({
       setup: () => {
-        const codecsList = ["video/webm;codecs=h264", "video/webm;codecs=av1", "video/webm;codecs=vp9"];
+        const codecsList = [
+          "video/webm;codecs=av01",
+          "video/webm;codecs=avc1",
+          "video/webm;codecs=h265",
+          "video/webm;codecs=h264",
+          "video/webm;codecs=vp9",
+          "video/webm;codecs=vp8",
+
+          "video/mp4;codecs=h265",
+          "video/mp4;codecs=h264",
+          "video/mp4;codecs=avc1",
+        ];
 
         const dialogRef = ref();
         const formRef = ref();
