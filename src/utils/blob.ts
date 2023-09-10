@@ -12,3 +12,14 @@ export function downloadBlob(blob: Blob, filename: string) {
   download(url, filename);
   window.URL.revokeObjectURL(url);
 }
+
+export function downloadAsIframe(link: string) {
+  const iframe = document.createElement("iframe");
+  iframe.hidden = true;
+  iframe.className = "hidden";
+  iframe.src = link;
+  document.body.appendChild(iframe);
+  return () => {
+    document.body.removeChild(iframe);
+  };
+}

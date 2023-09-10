@@ -137,6 +137,10 @@ watchEffect(() => {
 const zipLoading = ref(false);
 
 async function zipDownload() {
+  if (zipLoading.value) {
+    zipLoading.value = false;
+    return
+  }
   zipLoading.value = true;
   try {
     if (!loadedArea.value) {
@@ -153,7 +157,7 @@ async function zipDownload() {
 
     const zip = new fflate.Zip((err, dat, final) => {
       if (!err) {
-        downloadManager.write(dat.buffer);
+        downloadManager.write(dat);
         if (final) {
           downloadManager.close();
         }
@@ -162,8 +166,7 @@ async function zipDownload() {
       }
     });
     for (let item of loadedSeq.value) {
-      if (!zipLoading) {
-        zip.end();
+      if (!zipLoading.value) {
         break;
       }
       if (item.node) {
@@ -204,25 +207,34 @@ async function record() {
       )
 
       const mediaRecorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond });
-      mediaRecorder.ondataavailable = (event: any) => {
-        downloadManager.write(event.data)
+      mediaRecorder.ondataavailable = async (event: any) => {
+        downloadManager.write(new Uint8Array(await event.data.arrayBuffer()));
       };
       mediaRecorder.onerror = (event: any) => {
         error(event.error as Error)
         recording.value = false;
       }
-      mediaRecorder.onstop = () => {
+      mediaRecorder.onstop = async () => {
+        await sleep(500)
         downloadManager.close()
       }
 
       let index = 0;
+      let bufferTimeStamp = Date.now();
+
       currentView.value = loadedSeq.value[index].ts.toString();
       mediaRecorder.start();
       while (recording.value && (parseInt(currentView.value) < loadedSeq.value[loadedSeq.value.length - 1].ts)) {
         await sleep(speed)
         index += 1;
         currentView.value = loadedSeq.value[index].ts.toString();
-        mediaRecorder.requestData();
+
+        const currentTs = Date.now()
+        if (currentTs - bufferTimeStamp > 1000) {
+          // 每1秒写一次缓存
+          mediaRecorder.requestData();
+          bufferTimeStamp = currentTs;
+        }
       }
 
       mediaRecorder.stop();

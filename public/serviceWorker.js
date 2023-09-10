@@ -11,40 +11,56 @@ self.addEventListener("activate", (event) => {
 
 const map = new Map();
 
-self.onmessage = (event) => {
-  const data = event.data;
-
-  const filename = encodeURIComponent(data.filename.replace(/\//g, ":"))
-    .replace(/['()]/g, escape)
-    .replace(/\*/g, "%2A");
-
-  const downloadUrl = `${self.registration.scope}_${Math.random()}/${filename}`;
+/**
+ * 处理
+ */
+function handleStreamDownload(event) {
+  const { data } = event;
+  const { type, link, filename } = data;
   const port2 = event.ports[0];
-
-  // [stream, data]
   const { readable, writable } = new TransformStream();
 
   const metadata = [readable, data];
 
-  map.set(downloadUrl, metadata);
-  port2.postMessage({ download: downloadUrl, writable }, [writable]);
+  map.set(link, metadata);
+  port2.postMessage({ writable }, [writable]);
+}
+
+self.onmessage = (event) => {
+  const data = event.data;
+  if (data.type === "streamDownload") {
+    handleStreamDownload(event);
+  }
 };
 
 /**
  * 缓存控制
  */
-self.addEventListener("fetch", async (event) => {
+self.onfetch = (event) => {
   const { url } = event.request;
   const u = new URL(url);
 
   if (u.pathname.startsWith("/_stream_download/")) {
-    // 处理流式下载
-    const hijacke = map.get(url);
+    event.respondWith(handleRequestStreamDownload(event.request));
+  } else {
+    // 处理缓存
+    event.respondWith(handleRequest(event.request));
+  }
+};
 
-    if (!hijacke) return null;
+async function handleRequestStreamDownload(request) {
+  // 处理流式下载
+
+  const { url } = request;
+  const u = new URL(url);
+  const streamMap = map.get(u.pathname);
+  if (!streamMap) {
+    const init = { status: 200 };
+    const myResponse = new Response("Failed To Locate Stream", init);
+    return myResponse;
+  } else {
     map.delete(url);
-
-    const [stream, data] = hijacke;
+    const [stream, data] = streamMap;
     // Make filename RFC5987 compatible
     const fileName = encodeURIComponent(data.filename).replace(/['()]/g, escape).replace(/\*/g, "%2A");
 
@@ -52,15 +68,12 @@ self.addEventListener("fetch", async (event) => {
       "Content-Type": "application/octet-stream; charset=utf-8",
       "Transfer-Encoding": "chunked",
       "response-content-disposition": "attachment",
-      "Content-Disposition": `attachment; filename*=UTF-8'' ${fileName}`,
+      "Content-Disposition": `attachment; filename*=UTF-8''${fileName}`,
     });
 
-    event.respondWith(new Response(stream, { headers }));
-  } else {
-    // 处理缓存
-    event.respondWith(handleRequest(event.request));
+    return new Response(stream, { headers });
   }
-});
+}
 
 /**
  * @description 处理网络请求和缓存策略

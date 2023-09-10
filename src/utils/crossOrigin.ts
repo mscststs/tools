@@ -33,6 +33,7 @@ class CrossOrigin {
       return this;
     } else {
       this.iframe.className = "hidden";
+      this.iframe.hidden = true;
       await new Promise((resolve, reject) => {
         this.iframe.addEventListener("load", () => {
           resolve("true");
