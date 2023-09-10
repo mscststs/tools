@@ -50,6 +50,7 @@ const prompt = async (): Promise<any> => {
           const codecs = formData.get("codecs");
           const rate = formData.get("rate");
           const speed = formData.get("speed");
+          const fps = formData.get("fps");
 
           if (codecs && rate) {
             dialogRef.value.close(
@@ -57,6 +58,7 @@ const prompt = async (): Promise<any> => {
                 mimeType: codecs,
                 videoBitsPerSecond: rate,
                 speed,
+                fps,
               }),
             );
           } else {
@@ -72,14 +74,23 @@ const prompt = async (): Promise<any> => {
                 <div class="form-control flex-col flex gap-4">
                   <select class="select select-primary max-w-xs" name="speed" required>
                     <option disabled>播放速度</option>
-                    <option value="1000">1</option>
-                    <option value="500">2</option>
-                    <option value="200">5</option>
+                    <option value="1000">1 张/s</option>
+                    <option value="500">2 张/s</option>
+                    <option value="200">5 张/s</option>
                     <option value="100" selected>
-                      10
+                      10 张/s
                     </option>
-                    <option value="50">20</option>
-                    <option value="33">30</option>
+                    <option value="50">20 张/s</option>
+                    <option value="33">30 张/s</option>
+                    <option value="16">60 张/s</option>
+                  </select>
+                  <select class="select select-primary max-w-xs" name="fps" required>
+                    <option disabled>帧率</option>
+                    <option value="10">10fps</option>
+                    <option value="30" selected>
+                      30fps
+                    </option>
+                    <option value="60">60fps</option>
                   </select>
                   <select class="select select-primary max-w-xs" name="codecs" required>
                     <option disabled selected>

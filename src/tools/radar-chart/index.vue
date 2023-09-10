@@ -190,10 +190,10 @@ async function record() {
     recording.value = true;
     try {
       const canvas = ImageCanvas.value;
-      const stream = canvas.captureStream(30);
       // const recordedChunks: any[] = [];
 
-      const { mimeType, videoBitsPerSecond, speed } = await prompt();
+      const { mimeType, videoBitsPerSecond, speed, fps } = await prompt();
+      const stream = canvas.captureStream(fps);
 
       const downloadManager = await createDownloadManager(
         `RadarRecord_${selectArea.value?.name ?? ['未知']}_${formatTime()}.webm`,

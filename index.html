@@ -5,6 +5,17 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tools</title>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/serviceWorker.js", { scope: "/" })
+          .then(function (reg) {
+          })
+          .catch(function (error) {
+            console.error(error);
+          });
+      }
+    </script>
   </head>
   <body>
     <div id="app"></div>
