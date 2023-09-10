@@ -12,8 +12,7 @@ class BlobDonwloadManager {
   }
 
   write(buf: Uint8Array) {
-    if (buf.byteLength) {
-    }
+    this.chunks.push(buf);
   }
 
   close() {
