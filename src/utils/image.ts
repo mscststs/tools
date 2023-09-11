@@ -1,5 +1,3 @@
-import getCrossOrigin from "./crossOrigin";
-
 const memoryCache: {
   [key: string]: any;
 } = {};
@@ -54,14 +52,6 @@ const mscNmcProxy = async (url: string) => {
   return noProxy(u.href);
 };
 
-const crossOriginProxy = async (url: string) => {
-  const co = await getCrossOrigin();
-  const blob = (await co.call("fetch", {
-    url,
-  })) as Blob;
-  const target = URL.createObjectURL(blob);
-  return await noProxy(target);
-};
 
 export const getImage = async (url: string, proxy: string): Promise<HTMLImageElement> => {
   if (proxy === "mscnmc") {
@@ -72,9 +62,6 @@ export const getImage = async (url: string, proxy: string): Promise<HTMLImageEle
   }
   if (proxy === "wsrv") {
     return await wsrvProxy(url);
-  }
-  if (proxy === "crossOrigin") {
-    return await crossOriginProxy(url);
   }
   return await noProxy(url, "anonymous");
 };
