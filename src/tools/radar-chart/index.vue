@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect, reactive } from "vue";
 import { error } from "../../components/message";
-import { getImage, formatTime, sleep, createBlob, createDownloadManager } from "../../utils";
+import { getImage, formatTime, sleep, createBlob, createDownloadManager, FrameController } from "../../utils";
 import { mmcRadar } from "./data.ts";
 import prompt from "./recorder-prompt.tsx";
 // import jsZip from "jszip";
@@ -197,6 +197,7 @@ async function record() {
 
       const { mimeType, videoBitsPerSecond, speed, fps } = await prompt();
       const stream = canvas.captureStream(fps);
+      const frameController = new FrameController(speed);
 
       const downloadManager = await createDownloadManager(
         `RadarRecord_${selectArea.value?.name ?? ['未知']}_${formatTime()}.webm`,
@@ -225,7 +226,7 @@ async function record() {
       currentView.value = loadedSeq.value[index].ts.toString();
       mediaRecorder.start();
       while (recording.value && (parseInt(currentView.value) < loadedSeq.value[loadedSeq.value.length - 1].ts)) {
-        await sleep(speed)
+        await frameController.nextFrame();
         index += 1;
         currentView.value = loadedSeq.value[index].ts.toString();
 
@@ -237,6 +238,7 @@ async function record() {
         }
       }
 
+      frameController.end();
       mediaRecorder.stop();
     } catch (e) {
       if (e instanceof Error) {

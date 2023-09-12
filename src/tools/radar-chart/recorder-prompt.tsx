@@ -74,15 +74,15 @@ const prompt = async (): Promise<any> => {
                 <div class="form-control flex-col flex gap-4">
                   <select class="select select-primary max-w-xs" name="speed" required>
                     <option disabled>播放速度</option>
-                    <option value="1000">1 张/s</option>
-                    <option value="500">2 张/s</option>
-                    <option value="200">5 张/s</option>
-                    <option value="100" selected>
+                    <option value="1">1 张/s</option>
+                    <option value="2">2 张/s</option>
+                    <option value="5">5 张/s</option>
+                    <option value="10" selected>
                       10 张/s
                     </option>
-                    <option value="50">20 张/s</option>
-                    <option value="33">30 张/s</option>
-                    <option value="16">60 张/s</option>
+                    <option value="20">20 张/s</option>
+                    <option value="30">30 张/s</option>
+                    <option value="60">60 张/s</option>
                   </select>
                   <select class="select select-primary max-w-xs" name="fps" required>
                     <option disabled>帧率</option>
