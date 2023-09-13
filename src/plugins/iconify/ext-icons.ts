@@ -15,11 +15,12 @@ export { default as copyleft } from "@iconify-icons/mdi/copyleft";
 export { default as qrcodescan } from "@iconify-icons/mdi/qrcode-scan";
 export { default as clipboard } from "@iconify-icons/mdi/clipboard-outline";
 export { default as radar } from "@iconify-icons/mdi/radar";
+export { default as harddisk } from "@iconify-icons/mdi/harddisk";
 
 // logos
 export { default as vue } from "@iconify-icons/logos/vue";
 export { default as vitejs } from "@iconify-icons/logos/vitejs";
 export { default as tailwindcss } from "@iconify-icons/logos/tailwindcss-icon";
 
-//line-md
+// line-md
 export { default as iconify } from "@iconify-icons/line-md/iconify1";
