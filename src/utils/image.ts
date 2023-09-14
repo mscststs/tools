@@ -1,3 +1,5 @@
+import { escape_fetch } from "./";
+
 const memoryCache: {
   [key: string]: any;
 } = {};
@@ -56,7 +58,16 @@ const mscNmcProxy = async (url: string) => {
   return noProxy(u.href, "anonymous");
 };
 
+const escapeProxy = async (url: string) => {
+  const res = await escape_fetch(url);
+  const target = URL.createObjectURL(res);
+  return noProxy(target);
+};
+
 export const getImage = async (url: string, proxy: string): Promise<HTMLImageElement> => {
+  if (proxy === "escape") {
+    return await escapeProxy(url);
+  }
   if (proxy === "mscnmc") {
     return await mscNmcProxy(url);
   }

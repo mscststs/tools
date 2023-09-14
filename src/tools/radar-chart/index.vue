@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect, reactive } from "vue";
 import { error } from "../../components/message";
-import { getImage, formatTime, sleep, createBlob, createDownloadManager, FrameController } from "../../utils";
+import { getImage, formatTime, sleep, createBlob, createDownloadManager, FrameController, isEscaped } from "../../utils";
 import { mmcRadar } from "./data.ts";
 import prompt from "./recorder-prompt.tsx";
 // import jsZip from "jszip";
@@ -32,7 +32,7 @@ function getTimeVariables(date: Date) {
 const form = reactive({
   selectArea: mmcRadar[0].name,
   selectDuration: 3 * 60 * 60 * 1000,
-  selectedProxy: "appmask"
+  selectedProxy: isEscaped() ? "escape" : "appmask"
 });
 
 const selectArea = computed<UrlTemplate | null>(() => {
@@ -271,6 +271,7 @@ async function record() {
         <option :value="15 * 24 * 60 * 60 * 1000">15d</option>
       </select>
       <select class="select select-primary" v-model="form.selectedProxy">
+        <option value="escape">线路0：越狱</option>
         <option value="appmask">线路1：appmask（慢）</option>
         <option value="baidu">线路2：百度（不支持录制和下载）</option>
         <option value="wsrv">线路3：wsrv.nl（不稳定）</option>

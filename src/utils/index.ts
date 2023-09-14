@@ -5,3 +5,4 @@ export * from "./canvas";
 export * from "./blob";
 export * from "./download";
 export * from "./frame";
+export * from "./escape";

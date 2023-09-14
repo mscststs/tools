@@ -95,7 +95,7 @@ async function handleReadDrop(event: DragEvent) {
 </script>
 
 <template>
-  <div class="flex flex-auto flex-col w-full" @drop="handleReadDrop" @dragover.prevent>
+  <div class="flex flex-auto flex-col w-full relative" @drop="handleReadDrop" @dragover.prevent>
     <div class="flex flex-none flex-row justify-center gap-2">
       <label class="btn btn-primary">
 
@@ -107,7 +107,8 @@ async function handleReadDrop(event: DragEvent) {
         <input type="file" multiple webkitdirectory class="hidden" @change.prevent="handleReadFile">
       </label>
     </div>
-    <div class="flex flex-auto flex-row justify-center mt-4 " :class="chartsData.length === 0 ? 'invisible  ' : ''">
+    <div class="flex flex-auto flex-row justify-center mt-4 border-primary border p-2 box-border w-full"
+      :class="chartsData.length === 0 ? 'invisible  ' : ''">
       <treemap :data="chartsData"></treemap>
     </div>
   </div>
