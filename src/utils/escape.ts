@@ -24,7 +24,7 @@ export function escape_fetch(url: string, options?: Record<string, any>) {
 }
 
 export function install() {
-  window.open("/scripts/escape.user.js");
+  window.open("https://greasyfork.org/zh-CN/scripts/475297", "_blank");
 }
 
 export function isEscaped() {
