@@ -71,4 +71,13 @@ export const mmcRadar: UrlTemplate[] = [
     url: "http://image.nmc.cn/product/${UTC_YEAR}/${UTC_MONTH}/${UTC_DATE}/RDCP/SEVP_AOC_RDCP_SLDAS3_ECREF_ANWC_L88_PI_${UTC_YEAR}${UTC_MONTH}${UTC_DATE}${UTC_HOUR}${UTC_MINUTE}00000.PNG",
     offset: 0,
   },
+  {
+    name: "[降水量] 全国 1小时",
+    interval: 60 * 60 * 1000,
+    delay: 10 * 60 * 1000,
+    width: 2803,
+    height: 2372,
+    url: "http://image.nmc.cn/product/${UTC_YEAR}/${UTC_MONTH}/${UTC_DATE}/STFC/SEVP_NMC_STFC_SFER_ER1_ACHN_L88_PB_${UTC_YEAR}${UTC_MONTH}${UTC_DATE}${UTC_HOUR}${UTC_MINUTE}00000.jpg",
+    offset: 0,
+  },
 ];

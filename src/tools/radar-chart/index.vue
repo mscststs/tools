@@ -289,12 +289,12 @@ async function record() {
       </button>
     </div>
 
-    <div class="preview flex-auto flex flex-col items-center w-fit pt-6" v-if="loadedSeq && loadedSeq.length">
-      <div class="form flex-none w-full flex flex-row py-4 gap-4 items-center">
-        <div class="btn btn-outline">
+    <div class="preview flex-auto flex flex-col items-center w-full pt-6" v-if="loadedSeq && loadedSeq.length">
+      <div class="form flex-none w-full flex flex-row py-4 gap-4 items-center xl:max-w-[1200px]">
+        <div class=" btn btn-outline">
           {{ loadedArea?.name }}
         </div>
-        <div class="btn btn-outline">
+        <div class="btn btn-outline font-mono">
           {{ formatTime(new Date(parseInt(currentView))) }}
         </div>
         <input type="range" class="range range-primary flex-auto" :min="loadedSeq[0].ts"
@@ -319,8 +319,14 @@ async function record() {
           </template>
         </button>
       </div>
-      <canvas ref="ImageCanvas" :height="loadedArea?.height" :width="loadedArea?.width"
-        class="flex-none box-border border-primary border"></canvas>
+      <div class="render flex-auto box-border border-primary border w-full xl:max-w-[1200px]">
+        <svg :viewBox="`0 0 ${loadedArea?.width} ${loadedArea?.height}`" xmlns="http://www.w3.org/2000/svg"
+          class="w-full">
+          <foreignObject x="0" y="0" :width="loadedArea?.width" :height="loadedArea?.height">
+            <canvas ref="ImageCanvas" :height="loadedArea?.height" :width="loadedArea?.width" class="canvas"></canvas>
+          </foreignObject>
+        </svg>
+      </div>
     </div>
   </div>
 </template>
