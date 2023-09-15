@@ -5,7 +5,7 @@ import { getImage, formatTime, sleep, createBlob, createDownloadManager, FrameCo
 import { mmcRadar } from "./data.ts";
 import prompt from "./recorder-prompt.tsx";
 // import jsZip from "jszip";
-import * as fflate from "fflate";
+import { Zip, ZipDeflate } from "fflate";
 
 
 function getTimeVariables(date: Date) {
@@ -155,7 +155,7 @@ async function zipDownload() {
       true
     );
 
-    const zip = new fflate.Zip((err, dat, final) => {
+    const zip = new Zip((err, dat, final) => {
       if (!err) {
         downloadManager.write(dat);
         if (final) {
@@ -171,7 +171,7 @@ async function zipDownload() {
       }
       if (item.node) {
         const blob = await createBlob(item.node);
-        const image = new fflate.ZipDeflate(`${formatTime(new Date(item.ts))}.png`, { level: 9 });
+        const image = new ZipDeflate(`${formatTime(new Date(item.ts))}.png`, { level: 9 });
         zip.add(image);
         image.push(new Uint8Array(await blob.arrayBuffer()), true);
       }
