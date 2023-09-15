@@ -319,7 +319,8 @@ async function record() {
           </template>
         </button>
       </div>
-      <canvas ref="ImageCanvas" :height="loadedArea?.height" :width="loadedArea?.width" class="flex-none"></canvas>
+      <canvas ref="ImageCanvas" :height="loadedArea?.height" :width="loadedArea?.width"
+        class="flex-none box-border border-primary border"></canvas>
     </div>
   </div>
 </template>

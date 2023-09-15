@@ -29,8 +29,10 @@ class Message {
     const msgInstance = document.createElement("div");
     msgInstance.className = classNames[options.type];
     msgInstance.innerHTML = `
-      ${options.title ? `<h4 class="alert-heading">${options.title}</h4>` : ""}
-      ${options.message ? `<span class="alert-text">${options.message}</span>` : ""}
+      <div class="flex flex-col">
+        ${options.title ? `<h4 class="alert-heading">${options.title}</h4>` : ""}
+        ${options.message ? `<span class="alert-text">${options.message}</span>` : ""}
+      </div>
     `;
     this.dom.prepend(msgInstance);
 
@@ -39,34 +41,39 @@ class Message {
     }, options.duration);
   }
 
-  async info(message: string) {
+  async info(message: string, title = "") {
     this.showMessage({
       type: "info",
       message: message,
+      title: title,
     });
   }
-  async success(message: string) {
+  async success(message: string, title = "") {
     this.showMessage({
       type: "success",
       message: message,
+      title: title,
     });
   }
-  async warning(message: string) {
+  async warning(message: string, title = "") {
     this.showMessage({
       type: "warning",
       message: message,
+      title: title,
     });
   }
-  async error(err: string | Error) {
+  async error(err: string | Error, title = "") {
     if (typeof err === "string") {
       this.showMessage({
         type: "error",
         message: err,
+        title: title,
       });
     } else {
       this.showMessage({
         type: "error",
         message: err.message,
+        title: title,
       });
     }
   }
