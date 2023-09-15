@@ -38,9 +38,9 @@ const loadTool = async (tool: (typeof toolList)[0]) => {
 </script>
 
 <template>
-  <div class="font-bold flex flex-row gap-4 ">
-    <div class="tool-item flex flex-none " v-for="tool of toolList" :key="tool.id">
-      <div class="btn btn-primary" @click="loadTool(tool)">
+  <div class="font-bold flex flex-row gap-4">
+    <div class="list flex flex-row flex-wrap gap-4 justify-start content-start">
+      <div class="btn btn-primary flex-none" @click="loadTool(tool)" v-for="tool of toolList" :key="tool.id">
         <div class="swap" :class="tool.loading ? 'swap-active' : ''">
           <span class="swap-on loading loading-spinner loading-xs"></span>
           <i-icon :icon="tool.icon" class="swap-off w-4 h-4"></i-icon>
@@ -48,7 +48,6 @@ const loadTool = async (tool: (typeof toolList)[0]) => {
 
         <span class="font-normal">{{ tool.name }}</span>
       </div>
-
     </div>
   </div>
 </template>
