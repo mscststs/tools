@@ -114,7 +114,7 @@ async function handleReadFile(event: Event) {
     if (file.type.startsWith("image")) {
 
       const blob = new Blob([file], { type: file.type || 'application/*' })
-      const dataUrl = window.URL.createObjectURL(blob)
+      const dataUrl = window.URL.createObjectURL(blob);
       imgSrc.value = dataUrl;
 
       target.value = "";

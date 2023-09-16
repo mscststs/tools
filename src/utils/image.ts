@@ -65,7 +65,7 @@ const escapeProxy = async (url: string) => {
   return await noProxy(target);
 };
 
-export const getImage = async (url: string, proxy: string): Promise<HTMLImageElement> => {
+export const getImage = async (url: string, proxy?: string): Promise<HTMLImageElement> => {
   try {
     if (proxy === "escape") {
       return await escapeProxy(url);

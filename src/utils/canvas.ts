@@ -1,4 +1,4 @@
-export async function createBlob(element: HTMLImageElement | HTMLVideoElement) {
+export async function createBlob(element: HTMLImageElement | HTMLVideoElement, type = "image/png", quality = 1) {
   let width = 0;
   let height = 0;
 
@@ -17,13 +17,17 @@ export async function createBlob(element: HTMLImageElement | HTMLVideoElement) {
   const ctx = canvas.getContext("2d");
   ctx?.drawImage(element, 0, 0);
   const blob = await new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob((b) => {
-      if (b) {
-        resolve(b);
-      } else {
-        reject(new Error("transform Error"));
-      }
-    });
+    canvas.toBlob(
+      (b) => {
+        if (b) {
+          resolve(b);
+        } else {
+          reject(new Error("transform Error"));
+        }
+      },
+      type,
+      quality,
+    );
   });
   return blob;
 }
