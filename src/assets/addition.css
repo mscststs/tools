@@ -2,3 +2,8 @@
   user-drag:none;
   -webkit-user-drag:none;
 }
+
+input[type='range']{
+  --tw-pan-y: pan-y;
+  touch-action: var(--tw-pan-x) var(--tw-pan-y) var(--tw-pinch-zoom);
+}

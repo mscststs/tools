@@ -326,7 +326,7 @@ async function record() {
         </div>
 
 
-        <input type="range" class="range range-primary flex-auto touch-pan-y" :min="loadedSeq[0].ts"
+        <input type="range" class="range range-primary flex-auto" :min="loadedSeq[0].ts"
           :max="loadedSeq[loadedSeq.length - 1].ts" :step="loadedArea?.interval" v-model="currentView"
           :disabled="recording">
       </div>
