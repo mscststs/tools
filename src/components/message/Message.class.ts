@@ -19,7 +19,7 @@ const classNames = {
 class Message {
   private dom: HTMLElement = document.createElement("div");
   constructor() {
-    this.dom.className = "toast";
+    this.dom.className = "toast z-[100]";
     document.body.appendChild(this.dom);
   }
 

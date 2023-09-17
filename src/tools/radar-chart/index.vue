@@ -257,7 +257,7 @@ async function record() {
 
 <template>
   <div class="flex-auto flex flex-col chart items-center">
-    <div class="line form flex flex-row justify-center flex-none gap-2">
+    <div class="line form flex flex-row justify-center flex-none gap-2 flex-wrap">
       <select class="select select-primary" v-model="form.selectArea">
         <option v-for="item of mmcRadar" :key="item.name" :value="item.name">{{ item.name }}</option>
       </select>
@@ -288,36 +288,47 @@ async function record() {
         </template>
       </button>
     </div>
+    <div class="divider"></div>
 
     <div class="preview flex-auto flex flex-col items-center w-full pt-6" v-if="loadedSeq && loadedSeq.length">
-      <div class="form flex-none w-full flex flex-row py-4 gap-4 items-center xl:max-w-[1200px]">
-        <div class=" btn btn-outline">
-          {{ loadedArea?.name }}
+      <div class="form flex-none w-full flex flex-row py-4 gap-4 items-center xl:max-w-[1200px] flex-wrap">
+
+        <div class="right flex gap-4">
+
+          <div class=" btn btn-outline">
+            {{ loadedArea?.name }}
+          </div>
+          <div class="btn btn-outline font-mono">
+            {{ formatTime(new Date(parseInt(currentView))) }}
+          </div>
         </div>
-        <div class="btn btn-outline font-mono">
-          {{ formatTime(new Date(parseInt(currentView))) }}
+
+        <div class="flex-auto"></div>
+        <div class="right flex gap-4">
+          <button type="button" class="btn btn-primary" :disabled="loading" @click="record">
+            <template v-if="recording">
+              <span class="loading loading-spinner"></span>
+              录制中
+            </template>
+            <template v-else>
+              录制
+            </template>
+          </button>
+          <button type="button" class="btn btn-primary" :disabled="loading" @click="zipDownload">
+            <template v-if="zipLoading">
+              <span class="loading loading-spinner"></span>
+              打包中
+            </template>
+            <template v-else>
+              归档下载
+            </template>
+          </button>
         </div>
-        <input type="range" class="range range-primary flex-auto" :min="loadedSeq[0].ts"
+
+
+        <input type="range" class="range range-primary flex-auto touch-pan-y" :min="loadedSeq[0].ts"
           :max="loadedSeq[loadedSeq.length - 1].ts" :step="loadedArea?.interval" v-model="currentView"
           :disabled="recording">
-        <button type="button" class="btn btn-primary" :disabled="loading" @click="record">
-          <template v-if="recording">
-            <span class="loading loading-spinner"></span>
-            录制中
-          </template>
-          <template v-else>
-            录制
-          </template>
-        </button>
-        <button type="button" class="btn btn-primary" :disabled="loading" @click="zipDownload">
-          <template v-if="zipLoading">
-            <span class="loading loading-spinner"></span>
-            打包中
-          </template>
-          <template v-else>
-            归档下载
-          </template>
-        </button>
       </div>
       <div class="render flex-auto box-border border-primary border w-full xl:max-w-[1200px]">
         <svg :viewBox="`0 0 ${loadedArea?.width} ${loadedArea?.height}`" xmlns="http://www.w3.org/2000/svg"

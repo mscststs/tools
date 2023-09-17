@@ -221,20 +221,23 @@ watch([imgSrc, form], async () => {
 
 
     <!-- 预览 -->
-    <div class="render flex-none flex flex-col justify-center max-w-full w-[1200px] border border-primary relative"
+    <div
+      class="render flex-none flex flex-col justify-center max-w-full w-[1200px] border border-primary relative touch-pan-y"
       v-show="imgSrc">
       <div class="indicator w-full absolute z-0 top-0 pointer-events-none">
         <img ref="imgRef" :src="imgSrc" alt="" class="object-scale-down mx-auto">
       </div>
 
-      <div class="indicator w-full" @pointermove="handleChangeSplitLine">
+      <div class="indicator w-full" @pointermove.stop.prevent="handleChangeSplitLine"
+        @pointerdown="handleChangeSplitLine">
         <div class="wrap w-full" :style="maskStyle">
           <img :src="targetImageSrc" alt="" class="object-scale-down mx-auto drag-none">
         </div>
       </div>
 
       <div class="absolute z-10 top-0 w-full overflow-hidden pointer-events-none" ref="touchPanel">
-        <div class="splitLine w-[4px] h-full absolute top-0 left-1/2 bg-primary pointer-events-none" :style="splitStyle">
+        <div class="splitLine w-1 h-full absolute top-0 left-1/2 bg-opacity-70 bg-primary pointer-events-none"
+          :style="splitStyle">
 
           <div class="indicator w-[100px] -translate-x-[50px]">
             <span class="indicator-item indicator-start badge badge-primary" title="After"> {{ originSize }}</span>
