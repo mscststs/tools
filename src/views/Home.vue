@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import { useRouter, } from 'vue-router';
-import tools from "../tools/";
+import { tools, createLoader } from "../tools/";
 import { error } from "../components/message";
 
 const router = useRouter();
@@ -21,7 +21,7 @@ const loadTool = async (tool: (typeof toolList)[0]) => {
   lastTo = tool;
   tool.loading = true;
   try {
-    await tool.component();
+    await createLoader(tool)();
     if (lastTo === tool) {
       router.push({
         name: tool.id

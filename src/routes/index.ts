@@ -4,7 +4,7 @@ import Home from "../views/Home.vue";
 import Page404 from "../views/Page404.vue";
 import Tools from "../views/Tools.vue";
 
-import toolModules from "../tools";
+import { tools, createLoader } from "../tools";
 
 const routes = [
   {
@@ -14,11 +14,11 @@ const routes = [
   {
     path: "/tools/",
     component: Tools,
-    children: toolModules.map((tool) => {
+    children: tools.map((tool) => {
       return {
         path: `${tool.id}`,
         name: tool.id,
-        component: tool.component,
+        component: createLoader(tool),
       };
     }),
   },

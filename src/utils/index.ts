@@ -6,3 +6,5 @@ export * from "./blob";
 export * from "./download";
 export * from "./frame";
 export * from "./escape";
+export * from "./dom";
+export * from "./promise";

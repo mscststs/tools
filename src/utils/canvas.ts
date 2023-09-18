@@ -1,4 +1,4 @@
-export async function createBlob(element: HTMLImageElement | HTMLVideoElement, type = "image/png", quality = 1) {
+export async function createCanvas(element: HTMLImageElement | HTMLVideoElement) {
   let width = 0;
   let height = 0;
 
@@ -16,6 +16,11 @@ export async function createBlob(element: HTMLImageElement | HTMLVideoElement, t
   canvas.height = height;
   const ctx = canvas.getContext("2d");
   ctx?.drawImage(element, 0, 0);
+  return canvas;
+}
+
+export async function createBlob(element: HTMLImageElement | HTMLVideoElement, type = "image/png", quality = 1) {
+  const canvas = await createCanvas(element);
   const blob = await new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(
       (b) => {

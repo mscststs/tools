@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { usePermission } from "@vueuse/core";
 import { error, success } from "../../components/message"
-import { ref, watchEffect, reactive, watch } from "vue";
+import { ref, reactive, watch } from "vue";
 import { filesize } from "filesize";
-import { createBlob, getImage, download, formatTime } from "../../utils";
+import { createBlob, getImage, download, formatTime, createCanvas } from "../../utils";
 
 
 const supportClipBoard = !!navigator?.clipboard?.read ?? false;
@@ -147,23 +147,30 @@ async function handleChangeSplitLine(event: MouseEvent) {
 }
 
 const form = reactive({
-  type: "image/jpeg",
-  quality: "1",
+  type: "image/png",
+  quality: "0.8",
 });
 
-const qualityTypes = ["image/webp", "image/jpeg"];
 
-watchEffect(() => {
-  if (!qualityTypes.includes(form.type)) {
-    form.quality = "1";
-  }
-});
-
+// 处理压缩
 watch([imgSrc, form], async () => {
   if (imgSrc.value) {
-    const image = await getImage(imgSrc.value, "");
-    const blob = await createBlob(image, form.type, parseFloat(form.quality));
-    setTargetImage(blob);
+    if (form.type === "image/png") {
+      // 使用 UPNG 处理 PNG
+      const image = await getImage(imgSrc.value, "");
+      const canvas = await createCanvas(image);
+      const context = canvas.getContext("2d");
+      const data = context?.getImageData(0, 0, image.width, image.height).data;
+      const quality = parseFloat(form.quality);
+      const cnum = quality === 1 ? 0 : Math.max(1, Math.ceil(256 * quality));
+      const res = window.UPNG.encode([data?.buffer], image.width, image.height, cnum);
+      setTargetImage(new Blob([res], { type: "image/png" }));
+    } else {
+      // 使用 Canvas.toBlob处理
+      const image = await getImage(imgSrc.value, "");
+      const blob = await createBlob(image, form.type, parseFloat(form.quality));
+      setTargetImage(blob);
+    }
   }
 });
 
@@ -210,7 +217,7 @@ watch([imgSrc, form], async () => {
         </select>
       </div>
 
-      <div class="form-control w-full max-w-xs " v-show="['image/webp', 'image/jpeg'].includes(form.type)">
+      <div class="form-control w-full max-w-xs">
         <label class="label">
           <span class="label-text">质量</span>
           <span class="label-text-alt">{{ parseFloat(form.quality).toFixed(2) }}</span>
