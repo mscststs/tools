@@ -162,7 +162,7 @@ watch([imgSrc, form], async () => {
       const context = canvas.getContext("2d");
       const data = context?.getImageData(0, 0, image.width, image.height).data;
       const quality = parseFloat(form.quality);
-      const cnum = quality === 1 ? 0 : Math.max(1, Math.ceil(256 * quality));
+      const cnum = quality === 1 ? 0 : Math.max(2, Math.ceil(256 * quality));
       const res = window.UPNG.encode([data?.buffer], image.width, image.height, cnum);
       setTargetImage(new Blob([res], { type: "image/png" }));
     } else {
