@@ -17,6 +17,7 @@ export { default as clipboard } from "@iconify-icons/mdi/clipboard-outline";
 export { default as radar } from "@iconify-icons/mdi/radar";
 export { default as harddisk } from "@iconify-icons/mdi/harddisk";
 export { default as imageoutline } from "@iconify-icons/mdi/image-outline";
+export { default as webrtc } from "@iconify-icons/mdi/webrtc";
 
 // logos
 export { default as vue } from "@iconify-icons/logos/vue";

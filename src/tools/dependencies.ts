@@ -13,3 +13,12 @@ export const upng: Dependencies = {
   urls: ["https://cdn.jsdelivr.net/npm/upng-js@2.1.0/UPNG.min.js", "/lib/UPNG.js"],
   dependencies: [pako],
 };
+export const peerjs: Dependencies = {
+  name: "peerjs",
+  type: "js",
+  urls: [
+    "https://cdn.jsdelivr.net/npm/peerjs@1.5.0/dist/peerjs.min.js",
+    "https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js",
+    "/lib/peerjs.min.js",
+  ],
+};
