@@ -179,6 +179,9 @@ function createDataMessage(type = "chat", data: any) {
 }
 
 async function sendText() {
+  if (!dataConnection.value) {
+    return;
+  }
   const chatObject = createChatMessage("text", chatInput.value);
   chatHistory.push({
     ...chatObject,
@@ -208,7 +211,7 @@ async function sendImage(blob: Blob) {
 async function handleReadPaste(e: ClipboardEvent) {
   if (e?.clipboardData?.items) {
     const image = [...e?.clipboardData?.items].find(item => {
-      return item.kind === "file" && item.type.startsWith("image/")
+      return item.kind === "file" && item.type.startsWith("image/");
     });
     if (image) {
       const imageFile = image?.getAsFile();
@@ -238,7 +241,7 @@ async function handleReadUserMedia() {
       video: { facingMode: facingMode }, // 优先使用后置摄像头
       audio: audio,
     });
-    userMediaStream.value = mediaStream
+    userMediaStream.value = mediaStream;
     try {
       mediaConnection.value = peer.call(remotePeerId.value, mediaStream);
       myVideoRef.value.srcObject = mediaStream;
