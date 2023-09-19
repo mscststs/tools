@@ -300,12 +300,12 @@ async function handleReadUserMedia() {
           ref="chatHistoryView">
           <template v-for="item of chatHistory" :key="item.ts">
             <div class="flex flex-row justify-center text-sm opacity-50" v-if="item.type === 'info'">
-              <div class="time px-4 text-info">{{ formatTime(new Date(item.ts)), "HH:mm:ss" }}</div>
+              <div class="time px-4 text-info">{{ formatTime(new Date(item.ts), "HH:mm:ss") }}</div>
               <div class="">{{ item.data }}</div>
             </div>
             <div class="chat" :class="item.from === 'other' ? 'chat-start' : 'chat-end'" v-else>
               <div class="chat-header">
-                <time class="text-xs opacity-50">{{ formatTime(new Date(item.ts)), "HH:mm:ss" }}</time>
+                <time class="text-xs opacity-50">{{ formatTime(new Date(item.ts), "HH:mm:ss") }}</time>
               </div>
               <template v-if="item.type === 'text'">
                 <div class="chat-bubble chat-bubble-info ">{{ item.data }}</div>
