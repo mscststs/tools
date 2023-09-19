@@ -65,9 +65,9 @@ peer.on("call", (call: any) => {
 watchEffect(() => {
   if (dataConnection.value) {
     dataConnection.value.on("open", () => {
-      addSystemInfo(dataConnection.value.peer + " 连接成功");
+      addSystemInfo("连接成功");
       remotePeerId.value = dataConnection.value.peer;
-      success(dataConnection.value.peer, "连接成功");
+      // success(dataConnection.value.peer, "连接成功");
     });
     dataConnection.value.on("data", (data: any) => {
       if (data.as === "chat") {
@@ -295,12 +295,12 @@ async function handleReadUserMedia() {
           ref="chatHistoryView">
           <template v-for="item of chatHistory" :key="item.ts">
             <div class="flex flex-row justify-center text-sm opacity-50" v-if="item.type === 'info'">
-              <div class="time px-4 text-info">{{ formatTime(new Date(item.ts)) }}</div>
+              <div class="time px-4 text-info">{{ formatTime(new Date(item.ts)), "HH:mm:ss" }}</div>
               <div class="">{{ item.data }}</div>
             </div>
             <div class="chat" :class="item.from === 'other' ? 'chat-start' : 'chat-end'" v-else>
               <div class="chat-header">
-                <time class="text-xs opacity-50">{{ formatTime(new Date(item.ts)) }}</time>
+                <time class="text-xs opacity-50">{{ formatTime(new Date(item.ts)), "HH:mm:ss" }}</time>
               </div>
               <template v-if="item.type === 'text'">
                 <div class="chat-bubble chat-bubble-info ">{{ item.data }}</div>
