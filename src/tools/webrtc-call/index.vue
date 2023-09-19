@@ -3,6 +3,7 @@ import { ref, onBeforeUnmount, watchEffect, reactive } from "vue";
 import { useClipboard } from "@vueuse/core";
 import { success, error } from "../../components/message";
 import getPeerId from "./peerid-prompt";
+import getUserMediaOptions from "./userMedia-prompt"
 import { formatTime } from "../../utils";
 
 const peer = new window.Peer();
@@ -232,9 +233,10 @@ async function handleReadUserMedia() {
     return;
   }
   try {
+    const { facingMode, audio } = await getUserMediaOptions();
     const mediaStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "user" }, // 优先使用后置摄像头
-      audio: true,
+      video: { facingMode: facingMode }, // 优先使用后置摄像头
+      audio: audio,
     });
     userMediaStream.value = mediaStream
     try {
