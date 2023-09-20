@@ -296,7 +296,7 @@ async function handleReadUserMedia() {
         <video controls autoplay ref="myVideoRef" class="w-1/2 sm:w-full sm:h-1/2 object-contain flex-auto"></video>
       </div>
       <div class="chat-panel flex flex-col flex-auto ">
-        <div class="chat-history flex-grow h-[300px] flex-col border-primary border overflow-auto p-4"
+        <div class="chat-history flex-grow h-[300px] flex-col border-primary border overflow-auto p-4 scroll-smooth"
           ref="chatHistoryView">
           <template v-for="item of chatHistory" :key="item.ts">
             <div class="flex flex-row justify-center text-sm opacity-50" v-if="item.type === 'info'">
