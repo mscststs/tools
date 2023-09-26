@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import remux from "./mp4";
 import { ref } from "vue";
 import { createDownloadManager } from "../../utils/"
 
+const remux = window.mp4Remux;
 const videoVideo = ref();
 const videoAudio = ref();
 
