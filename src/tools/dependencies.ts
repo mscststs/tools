@@ -27,7 +27,7 @@ export const mp4Remux: Dependencies = {
   name: "mp4-remux",
   type: "js",
   urls: [
-    "https://cdn.jsdelivr.net/npm/mp4-remux@0.1.0/lib/mp4-remux.iife.js",
-    "https://unpkg.com/mp4-remux@0.1.0/lib/mp4-remux.iife.js",
+    "https://cdn.jsdelivr.net/npm/mp4-remux@latest/lib/mp4-remux.iife.js",
+    "https://unpkg.com/mp4-remux@latest/lib/mp4-remux.iife.js",
   ],
 };
