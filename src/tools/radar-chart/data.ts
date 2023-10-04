@@ -72,6 +72,15 @@ export const mmcRadar: UrlTemplate[] = [
     offset: 0,
   },
   {
+    name: "台湾",
+    interval: 10 * 60 * 1000,
+    delay: 10 * 60 * 1000 * 2,
+    width: 3600,
+    height: 3600,
+    url: "https://www.cwa.gov.tw/Data/radar/CV1_3600_${YEAR}${MONTH}${DATE}${HOUR}${MINUTE}.png",
+    offset: 0,
+  },
+  {
     name: "[降水量] 全国 1小时",
     interval: 60 * 60 * 1000,
     delay: 10 * 60 * 1000,
