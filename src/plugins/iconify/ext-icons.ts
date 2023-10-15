@@ -19,6 +19,7 @@ export { default as harddisk } from "@iconify-icons/mdi/harddisk";
 export { default as imageoutline } from "@iconify-icons/mdi/image-outline";
 export { default as webrtc } from "@iconify-icons/mdi/webrtc";
 export { default as videooutline } from "@iconify-icons/mdi/video-outline";
+export { default as diffwiew } from "@iconify-icons/mdi/vector-difference-ab";
 
 // logos
 export { default as vue } from "@iconify-icons/logos/vue";
