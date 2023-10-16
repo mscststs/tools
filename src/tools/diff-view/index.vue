@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, shallowRef, watch } from 'vue';
-import { useLocalStorage } from '@vueuse/core';
+import { useLocalStorage, usePreferredColorScheme } from '@vueuse/core';
 
 
 
@@ -29,12 +29,14 @@ const languages = [
 
 
 const siteTheme = useLocalStorage("theme", "");
+const preferredColor = usePreferredColorScheme()
+
 
 const el = ref();
 
 // 检查主题色并切换 monaco 主题
 watch(
-  [siteTheme, el],
+  [siteTheme, el, preferredColor],
   () => {
     if (el.value) {
       const v = window.getComputedStyle(el.value);

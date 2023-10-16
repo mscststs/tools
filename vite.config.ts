@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [vue(), vueJsx()],
   server: {
     host: "0.0.0.0",
+    port: 8087,
   },
   build: {
     sourcemap: true,
