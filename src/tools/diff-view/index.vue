@@ -1,22 +1,13 @@
 <script setup lang="ts">
-import { ref, shallowRef, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useLocalStorage, usePreferredColorScheme } from '@vueuse/core';
 
-
-
-const diffEditorRef = shallowRef();
-const handleMount = (diffEditor: any) => (diffEditorRef.value = diffEditor);
 
 const OPTIONS = {
   automaticLayout: true,
   originalEditable: true,
   readOnly: false,
 };
-
-watch(() => diffEditorRef, () => {
-  const originEditor = diffEditorRef.value.getOriginalEditor();
-  originEditor.set
-});
 
 const theme = ref("vs-dark");
 const language = ref("plaintext");
@@ -28,11 +19,11 @@ const languages = [
 ];
 
 
-const siteTheme = useLocalStorage("theme", "");
-const preferredColor = usePreferredColorScheme()
-
-
 const el = ref();
+const siteTheme = useLocalStorage("theme", "");
+const preferredColor = usePreferredColorScheme();
+
+
 
 // 检查主题色并切换 monaco 主题
 watch(
@@ -45,7 +36,7 @@ watch(
       if (matches && matches.length === 3) {
         const [r, g, b] = matches;
         const isLight = (r + g + b) / 3 > 128 ? true : false;
-        theme.value = isLight ? "vs" : "vs-dark"
+        theme.value = isLight ? "vs" : "vs-dark";
       }
     }
   });
@@ -69,7 +60,7 @@ watch(
     <div class="flex-auto border border-primary">
 
       <DiffEditor :theme=theme original="" :originalLanguage="language" modified="" :modifiedLanguage="language"
-        originalModelPath="a.txt" modifiedModelPath="b.txt" :options="OPTIONS" @mount="handleMount">
+        originalModelPath="a.txt" modifiedModelPath="b.txt" :options="OPTIONS">
       </DiffEditor>
     </div>
   </div>
