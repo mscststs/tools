@@ -4,7 +4,7 @@ import Home from "../views/Home.vue";
 import Page404 from "../views/Page404.vue";
 import Tools from "../views/Tools.vue";
 
-import { tools, createLoader } from "../tools";
+// import { tools, createLoader } from "../tools";
 
 const routes = [
   {
@@ -12,15 +12,8 @@ const routes = [
     component: Home,
   },
   {
-    path: "/tools/",
+    path: "/tools/:toolName",
     component: Tools,
-    children: tools.map((tool) => {
-      return {
-        path: `${tool.id}`,
-        name: tool.id,
-        component: createLoader(tool),
-      };
-    }),
   },
   {
     path: "/:catchAll(.*)",

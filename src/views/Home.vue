@@ -21,11 +21,10 @@ const loadTool = async (tool: (typeof toolList)[0]) => {
   lastTo = tool;
   tool.loading = true;
   try {
-    await createLoader(tool)();
+    const { loader } = createLoader(tool);
+    await loader();
     if (lastTo === tool) {
-      router.push({
-        name: tool.id
-      });
+      router.push(`/tools/${tool.id}`);
     }
   } catch (err) {
     if (err instanceof Error) {
