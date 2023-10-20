@@ -5,3 +5,4 @@ export * from "./image-convert";
 export * from "./webrtc-call";
 export * from "./mp4-remux";
 export * from "./diff-view";
+export * from "./led-view";

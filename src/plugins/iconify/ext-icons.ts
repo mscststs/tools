@@ -28,3 +28,6 @@ export { default as tailwindcss } from "@iconify-icons/logos/tailwindcss-icon";
 
 // line-md
 export { default as iconify } from "@iconify-icons/line-md/iconify1";
+
+//icon-park-outline
+export { default as movieboard } from "@iconify-icons/icon-park-outline/movie-board";
