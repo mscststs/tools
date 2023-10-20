@@ -8,10 +8,9 @@ import { useElementSize, useFullscreen } from '@vueuse/core'
 
 const el = ref(null);
 const inputEl = ref(null);
-const hidEl = ref(null);
 
 const { width, height } = useElementSize(el);
-const { isFullscreen, enter, exit, toggle } = useFullscreen(el)
+const { toggle } = useFullscreen(el)
 
 const form = reactive({
   duration: 10,
