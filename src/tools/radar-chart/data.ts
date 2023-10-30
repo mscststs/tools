@@ -89,4 +89,22 @@ export const mmcRadar: UrlTemplate[] = [
     url: "http://image.nmc.cn/product/${UTC_YEAR}/${UTC_MONTH}/${UTC_DATE}/STFC/SEVP_NMC_STFC_SFER_ER1_ACHN_L88_PB_${UTC_YEAR}${UTC_MONTH}${UTC_DATE}${UTC_HOUR}${UTC_MINUTE}00000.jpg",
     offset: 0,
   },
+  {
+    name: "[气温] 全国 逐日",
+    interval: 60 * 60 * 1000 * 24,
+    delay: 10 * 60 * 1000,
+    width: 2803,
+    height: 2372,
+    url: "http://image.nmc.cn/product/${UTC_YEAR}/${UTC_MONTH}/${UTC_DATE}/WEAP/SEVP_NMC_WEAP_SOB_EAT_ACHN_LNO_P9_${UTC_YEAR}${UTC_MONTH}${UTC_DATE}000000000.JPG",
+    offset: 0,
+  },
+  {
+    name: "[天气] 全国 叠加卫星云图",
+    interval: 60 * 60 * 1000 * 3,
+    delay: 10 * 60 * 1000,
+    width: 2445,
+    height: 2118,
+    url: "http://image.nmc.cn/product/${UTC_YEAR}/${UTC_MONTH}/${UTC_DATE}/WESA/SEVP_NMC_WESA_SFER_ESPCT_ACWP_L00_P9_${UTC_YEAR}${UTC_MONTH}${UTC_DATE}${UTC_HOUR}0000000.jpg",
+    offset: 0,
+  },
 ];
