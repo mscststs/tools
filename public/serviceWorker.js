@@ -1,5 +1,6 @@
 // service-worker.js
 const SW_VERSION = "v1";
+const ExtendsList = ["clarity.ms"];
 
 self.addEventListener("install", () => {
   self.skipWaiting();
@@ -43,8 +44,14 @@ self.onfetch = (event) => {
   if (u.pathname.startsWith("/_stream_download/")) {
     event.respondWith(handleRequestStreamDownload(event.request));
   } else {
-    // 处理缓存
-    event.respondWith(handleRequest(event.request));
+    const { url } = event.request;
+    if (ExtendsList.find((item) => ~url.indexOf(item))) {
+      // 第三方跨域服务组件，不处理
+      return;
+    } else {
+      // 处理缓存
+      event.respondWith(handleRequest(event.request));
+    }
   }
 };
 

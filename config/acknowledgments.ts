@@ -24,4 +24,9 @@ export default [
     icon: "ext:iconify",
     link: "https://icon-sets.iconify.design/",
   },
+  {
+    name: "Clarity",
+    icon: "ext:analytics",
+    link: "https://clarity.microsoft.com/",
+  },
 ];

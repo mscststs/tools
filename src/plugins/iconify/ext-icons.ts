@@ -20,6 +20,7 @@ export { default as imageoutline } from "@iconify-icons/mdi/image-outline";
 export { default as webrtc } from "@iconify-icons/mdi/webrtc";
 export { default as videooutline } from "@iconify-icons/mdi/video-outline";
 export { default as diffwiew } from "@iconify-icons/mdi/vector-difference-ab";
+export { default as analytics } from "@iconify-icons/mdi/analytics";
 
 // logos
 export { default as vue } from "@iconify-icons/logos/vue";
