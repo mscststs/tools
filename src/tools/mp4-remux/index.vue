@@ -48,6 +48,27 @@ if (parent !== self) {
       videoStream = data.stream;
     } else if (data.type === "audio") {
       audioStream = data.stream;
+    } else if (data.type === "download") {
+      const filename = data.filename;
+      const downloadStream = data.stream;
+      if(downloadStream){
+        const downloadManager = await createDownloadManager(
+          `${filename}.mp4`,
+          {
+            "video/mp4": ".mp4",
+          },
+          true,
+        );
+        const writable = new WritableStream({
+          write: (chunk) => {
+            downloadManager.write(chunk);
+          },
+          close: () => {
+            downloadManager.close();
+          }
+        });
+        downloadStream.pipeTo(writable);
+      }
     } else if (data.type === "remux") {
       const filename = data.filename;
       const readable = remux(videoStream, audioStream);
