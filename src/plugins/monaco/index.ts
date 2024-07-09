@@ -1,4 +1,4 @@
-import { Plugin, defineAsyncComponent } from "vue";
+import { type Plugin, defineAsyncComponent } from "vue";
 import { loader } from "@guolao/vue-monaco-editor";
 loader.config({
   paths: {

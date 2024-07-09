@@ -7,6 +7,7 @@ export { default as colorswatch } from "@iconify-icons/heroicons-outline/color-s
 // mingcute
 export { default as downfill } from "@iconify-icons/mingcute/down-fill";
 export { default as cube3dline } from "@iconify-icons/mingcute/cube-3d-line";
+export { default as micline } from "@iconify-icons/mingcute/mic-line";
 
 // mdi
 export { default as success } from "@iconify-icons/mdi/success";

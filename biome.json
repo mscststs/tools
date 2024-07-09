@@ -2,10 +2,10 @@
   "formatter": {
     "lineWidth": 120,
     "indentStyle": "space",
-    "indentSize": 2
+    "indentWidth": 2
   },
   "files": {
-    "ignore": ["dist/*", "node_modules/*", "public/lib/*"]
+    "ignore": ["dist/*", "node_modules/*", "public/lib/*", "src/tools/silk-transfer/wasm"]
   },
   "javascript": {
     "formatter": {
@@ -14,6 +14,9 @@
   },
   "linter": {
     "rules": {
+      "complexity": {
+        "noForEach": "off"
+      },
       "style": {
         "useSelfClosingElements": "off"
       },

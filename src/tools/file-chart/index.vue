@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { error } from "../../components/message";
 import { ref } from "vue";
-import treemap from "./treemap.vue"
+import treemap from "./treemap.vue";
 
-const chartsData = ref<directoryList[]>([])
+const chartsData = ref<directoryList[]>([]);
 
 function generateFileTreeByFiles(files: HTMLInputElement["files"]) {
   if (!files || files.length === 0) {
@@ -15,25 +15,23 @@ function generateFileTreeByFiles(files: HTMLInputElement["files"]) {
 
   function getAndCreateDirectory(fullRelativeDirectory: string[]) {
     if (fullRelativeDirectory.length === 0) {
-      return treeMap
+      return treeMap;
     }
     if (!directoryMap[fullRelativeDirectory.join("/")]) {
       const prev = getAndCreateDirectory(fullRelativeDirectory.slice(0, -1));
       const current: directoryList = {
         path: fullRelativeDirectory.join("/"),
         name: fullRelativeDirectory[fullRelativeDirectory.length - 1],
-        children: []
+        children: [],
       };
       prev?.push(current);
       directoryMap[fullRelativeDirectory.join("/")] = current;
       return current.children;
-    } else {
-      return directoryMap[fullRelativeDirectory.join("/")].children;
     }
+    return directoryMap[fullRelativeDirectory.join("/")].children;
   }
 
   for (const file of files) {
-
     const { name, webkitRelativePath, size } = file;
     const fullRelativeDirectory = webkitRelativePath.split("/");
     fullRelativeDirectory.pop(); // 移除文件名
@@ -41,11 +39,10 @@ function generateFileTreeByFiles(files: HTMLInputElement["files"]) {
     dir?.push({
       name: name,
       path: fullRelativeDirectory.join("/"),
-      value: size
-    })
-  };
+      value: size,
+    });
+  }
   return treeMap;
-
 }
 
 const loading = ref(false);
@@ -54,7 +51,7 @@ function handleReadFile(event: Event) {
   if (loading.value) {
     return;
   }
-  const target = event.target as HTMLInputElement
+  const target = event.target as HTMLInputElement;
   if (target.files) {
     const files = target.files;
     loading.value = true;
@@ -67,20 +64,19 @@ function handleReadFile(event: Event) {
 
     target.value = "";
   } else {
-    error("目录为空")
+    error("目录为空");
     throw new Error("Format Not support");
   }
 }
 
 async function handleReadDrop(event: DragEvent) {
-
   event.preventDefault();
   event.stopPropagation();
   if (event?.dataTransfer?.items) {
-    for (let item of event?.dataTransfer?.items) {
+    for (const item of event.dataTransfer.items) {
       const fileHandler = await item.getAsFileSystemHandle();
       if (fileHandler?.kind === "directory") {
-        if ("entries" in fileHandler && typeof fileHandler["entries"] === "function") {
+        if ("entries" in fileHandler && typeof fileHandler.entries === "function") {
           for await (const [key, value] of fileHandler.entries()) {
             console.log({ key, value });
           }
@@ -90,8 +86,6 @@ async function handleReadDrop(event: DragEvent) {
     }
   }
 }
-
-
 </script>
 
 <template>

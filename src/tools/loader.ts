@@ -1,5 +1,5 @@
 import { addElement, anySuccess } from "../utils";
-import { ref, Ref } from "vue";
+import { ref, type Ref } from "vue";
 
 const dependenciesLoadStatus: Record<string, boolean> = {};
 
@@ -9,30 +9,28 @@ async function loadDependencies(dependencies: Dependencies[], loadStatus: Ref<st
       dependencies.map(async (dependency) => {
         if (dependenciesLoadStatus[dependency.name]) {
           return true;
-        } else {
-          if (dependency.dependencies) {
-            await loadDependencies(dependency.dependencies, loadStatus);
-          }
-
-          const urls = dependency.urls?.length ? dependency.urls : [dependency.url];
-
-          loadStatus.value = `正在加载: ${dependency.name}`;
-          await anySuccess(
-            urls.map((url) => {
-              if (dependency.type === "js") {
-                return () => addElement("script", { src: url });
-              } else {
-                return () =>
-                  addElement("link", {
-                    rel: "stylesheet",
-                    href: url,
-                  });
-              }
-            }),
-          );
-
-          dependenciesLoadStatus[dependency.name] = true;
         }
+        if (dependency.dependencies) {
+          await loadDependencies(dependency.dependencies, loadStatus);
+        }
+
+        const urls = dependency.urls?.length ? dependency.urls : [dependency.url];
+
+        loadStatus.value = `正在加载: ${dependency.name}`;
+        await anySuccess(
+          urls.map((url) => {
+            if (dependency.type === "js") {
+              return () => addElement("script", { src: url });
+            }
+            return () =>
+              addElement("link", {
+                rel: "stylesheet",
+                href: url,
+              });
+          }),
+        );
+
+        dependenciesLoadStatus[dependency.name] = true;
       }),
     );
   }
@@ -40,7 +38,7 @@ async function loadDependencies(dependencies: Dependencies[], loadStatus: Ref<st
 
 export function createLoader(module: Tool) {
   const loadStatus = ref("");
-  const loader = async function () {
+  const loader = async () => {
     const { component, dependencies } = module;
 
     // 检查 dependencies

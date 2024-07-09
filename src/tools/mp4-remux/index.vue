@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { createDownloadManager } from "../../utils/"
+import { createDownloadManager } from "../../utils/";
 
 const remux = window.mp4Remux;
 const videoVideo = ref();
@@ -17,7 +17,7 @@ async function handleRemux() {
     const readable = remux(videoStream, audioStream);
 
     const downloadManager = await createDownloadManager(
-      `file.mp4`,
+      "file.mp4",
       {
         "video/mp4": ".mp4",
       },
@@ -29,8 +29,8 @@ async function handleRemux() {
       },
       close: () => {
         downloadManager.close();
-      }
-    })
+      },
+    });
     readable.pipeTo(writable);
   }
 }
@@ -51,7 +51,7 @@ if (parent !== self) {
     } else if (data.type === "download") {
       const filename = data.filename;
       const downloadStream = data.stream;
-      if(downloadStream){
+      if (downloadStream) {
         const downloadManager = await createDownloadManager(
           `${filename}.mp4`,
           {
@@ -65,7 +65,7 @@ if (parent !== self) {
           },
           close: () => {
             downloadManager.close();
-          }
+          },
         });
         downloadStream.pipeTo(writable);
       }
@@ -85,14 +85,12 @@ if (parent !== self) {
         },
         close: () => {
           downloadManager.close();
-        }
-      })
+        },
+      });
       readable.pipeTo(writable);
     }
-  }
+  };
 }
-
-
 </script>
 
 <template>

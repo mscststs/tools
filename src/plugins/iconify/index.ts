@@ -1,4 +1,4 @@
-import { Plugin } from "vue";
+import type { Plugin } from "vue";
 import localIcons from "./local-icons";
 import * as extIcons from "./ext-icons";
 import { Icon, addIcon } from "@iconify/vue";

@@ -7,14 +7,14 @@
 export class FrameController {
   frameDelay: number;
 
-  callback?: Function;
+  callback?: () => void;
 
-  resolve?: Function;
-  reject?: Function;
+  resolve?: (value?: unknown) => void;
+  reject?: () => void;
 
   lastFrameTs?: number;
   running = true;
-  constructor(fps: number, callback?: Function) {
+  constructor(fps: number, callback?: () => void) {
     this.frameDelay = Math.floor(1000 / fps);
     this.callback = callback;
     this.step = this.step.bind(this);

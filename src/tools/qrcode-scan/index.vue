@@ -1,10 +1,9 @@
 <script setup lang="ts">
-
 import { ref, watchEffect } from "vue";
-import QrScanner from 'qr-scanner';
+import QrScanner from "qr-scanner";
 import { useClipboard, usePermission } from "@vueuse/core";
 import startCapture from "./capture";
-import { error } from "../../components/message"
+import { error } from "../../components/message";
 
 /**
  * 识别结果
@@ -24,21 +23,19 @@ const accessClipboard = usePermission("clipboard-read");
 const accessGetUserMedia = usePermission("camera");
 
 const { copy, copied } = useClipboard({
-  legacy: true
+  legacy: true,
 });
-
 
 async function handleReadPaste(e: ClipboardEvent) {
   if (e?.clipboardData?.items) {
-    const image = [...e?.clipboardData?.items].find(item => {
-      return item.kind === "file" && item.type.startsWith("image/")
+    const image = [...e.clipboardData.items].find((item) => {
+      return item.kind === "file" && item.type.startsWith("image/");
     });
     if (image) {
       const imageFile = image?.getAsFile();
       if (imageFile) {
-
-        const blob = new Blob([imageFile], { type: image.type || 'application/*' })
-        const dataUrl = window.URL.createObjectURL(blob)
+        const blob = new Blob([imageFile], { type: image.type || "application/*" });
+        const dataUrl = window.URL.createObjectURL(blob);
         imgSrc.value = dataUrl;
       }
     } else {
@@ -51,22 +48,20 @@ async function handleReadDrop(event: DragEvent) {
   event.preventDefault();
   event.stopPropagation();
   if (event?.dataTransfer?.items) {
-    const image = [...event.dataTransfer.items].find(item => {
-      return item.kind === "file" && item.type.startsWith("image/")
+    const image = [...event.dataTransfer.items].find((item) => {
+      return item.kind === "file" && item.type.startsWith("image/");
     });
     if (image) {
       const imageFile = image?.getAsFile();
       if (imageFile) {
-
-        const blob = new Blob([imageFile], { type: image.type || 'application/*' })
-        const dataUrl = window.URL.createObjectURL(blob)
+        const blob = new Blob([imageFile], { type: image.type || "application/*" });
+        const dataUrl = window.URL.createObjectURL(blob);
         imgSrc.value = dataUrl;
       }
     } else {
       error("不支持的格式");
     }
   }
-
 }
 
 async function handleReadDisplay() {
@@ -76,17 +71,16 @@ async function handleReadDisplay() {
       audio: false,
     });
     try {
-      let dataUrl = await startCapture(mediaStream);
+      const dataUrl = await startCapture(mediaStream);
       imgSrc.value = dataUrl;
     } catch (e: any) {
       console.error(e);
     } finally {
-      mediaStream.getTracks().forEach(track => track.stop())
+      mediaStream.getTracks().forEach((track) => track.stop());
     }
   } catch (e: any) {
     error(e);
   }
-
 }
 async function handleReadUserMedia() {
   try {
@@ -95,12 +89,12 @@ async function handleReadUserMedia() {
       audio: false,
     });
     try {
-      let dataUrl = await startCapture(mediaStream);
+      const dataUrl = await startCapture(mediaStream);
       imgSrc.value = dataUrl;
     } catch (e: any) {
       console.error(e);
     } finally {
-      mediaStream.getTracks().forEach(track => track.stop())
+      mediaStream.getTracks().forEach((track) => track.stop());
     }
   } catch (e: any) {
     error(e);
@@ -108,19 +102,17 @@ async function handleReadUserMedia() {
 }
 
 async function handleReadFile(event: Event) {
-  const target = event.target as HTMLInputElement
-  if (target.files && target.files[0]) {
+  const target = event.target as HTMLInputElement;
+  if (target.files?.[0]) {
     const file = target.files[0];
     if (file.type.startsWith("image")) {
-
-      const blob = new Blob([file], { type: file.type || 'application/*' })
+      const blob = new Blob([file], { type: file.type || "application/*" });
       const dataUrl = window.URL.createObjectURL(blob);
       imgSrc.value = dataUrl;
 
       target.value = "";
-
     } else {
-      error("不支持的格式")
+      error("不支持的格式");
       throw new Error("Format Not support");
     }
   }
@@ -148,7 +140,7 @@ watchEffect(async () => {
   if (imgSrc.value) {
     result.value = "";
     try {
-      let { data: res } = await QrScanner.scanImage(imgSrc.value, {
+      const { data: res } = await QrScanner.scanImage(imgSrc.value, {
         alsoTryWithoutScanRegion: true,
       });
       result.value = res;
@@ -158,10 +150,6 @@ watchEffect(async () => {
     }
   }
 });
-
-
-
-
 </script>
 
 <template>

@@ -36,7 +36,7 @@ const prompt = async (): Promise<any> => {
           e.preventDefault();
           const formData = new FormData(formRef.value);
           const facingMode = formData.get("facingMode");
-          const audio = formData.get("audio") === "1" ? true : false;
+          const audio = formData.get("audio") === "1";
 
           if (facingMode) {
             dialogRef.value.close(JSON.stringify({ facingMode, audio }));
