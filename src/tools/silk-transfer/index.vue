@@ -79,7 +79,7 @@ async function handleTransfer() {
 
 <template>
   <div class="flex flex-col flex-auto">
-    <div class="flex flex-row gap-4 justify-center">
+    <div class="flex flex-row gap-4 justify-center flex-wrap">
       <label class="btn btn-primary q-check">
         <span>选择silk音频</span>
         <input type="file" class="hidden" ref="audio" accept="*/*" required>
