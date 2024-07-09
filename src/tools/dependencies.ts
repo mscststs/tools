@@ -32,3 +32,13 @@ export const mp4Remux: Dependencies = {
     "https://unpkg.com/mp4-remux@latest/lib/mp4-remux.iife.js",
   ],
 };
+
+export const lamejs: Dependencies = {
+  name: "lamejs",
+  type: "js",
+  urls: [
+    "/lib/lame.all.js",
+    "https://cdn.jsdelivr.net/npm/lamejs@latest/lame.all.js",
+    "https://unpkg.com/lamejs@latest/lame.all.js",
+  ],
+};

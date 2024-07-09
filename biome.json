@@ -5,7 +5,7 @@
     "indentWidth": 2
   },
   "files": {
-    "ignore": ["dist/*", "node_modules/*", "public/lib/*"]
+    "ignore": ["dist/*", "node_modules/*", "public/lib/*", "src/tools/silk-transfer/wasm"]
   },
   "javascript": {
     "formatter": {

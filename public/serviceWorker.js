@@ -48,10 +48,9 @@ self.onfetch = (event) => {
     if (ExtendsList.find((item) => ~url.indexOf(item))) {
       // 第三方跨域服务组件，不处理
       return;
-    } else {
-      // 处理缓存
-      event.respondWith(handleRequest(event.request));
     }
+    // 处理缓存
+    event.respondWith(handleRequest(event.request));
   }
 };
 
@@ -65,21 +64,20 @@ async function handleRequestStreamDownload(request) {
     const init = { status: 200 };
     const myResponse = new Response("Failed To Locate Stream", init);
     return myResponse;
-  } else {
-    map.delete(url);
-    const [stream, data] = streamMap;
-    // Make filename RFC5987 compatible
-    const fileName = encodeURIComponent(data.filename).replace(/['()]/g, escape).replace(/\*/g, "%2A");
-
-    const headers = new Headers({
-      "Content-Type": "application/octet-stream; charset=utf-8",
-      "Transfer-Encoding": "chunked",
-      "response-content-disposition": "attachment",
-      "Content-Disposition": `attachment; filename*=UTF-8''${fileName}`,
-    });
-
-    return new Response(stream, { headers });
   }
+  map.delete(url);
+  const [stream, data] = streamMap;
+  // Make filename RFC5987 compatible
+  const fileName = encodeURIComponent(data.filename).replace(/['()]/g, escape).replace(/\*/g, "%2A");
+
+  const headers = new Headers({
+    "Content-Type": "application/octet-stream; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "response-content-disposition": "attachment",
+    "Content-Disposition": `attachment; filename*=UTF-8''${fileName}`,
+  });
+
+  return new Response(stream, { headers });
 }
 
 /**
@@ -95,7 +93,7 @@ async function handleRequest(request) {
     const response = await fetch(request);
     if (method !== "get") {
       const responseClone = response.clone();
-      caches.open(SW_VERSION).then(function (cache) {
+      caches.open(SW_VERSION).then((cache) => {
         cache.put(request, responseClone);
       });
     }
@@ -105,11 +103,10 @@ async function handleRequest(request) {
     const match = await caches.match(request);
     if (match) {
       return match;
-    } else {
-      // 检查目标是否为 document，如果是的话，走 SPA 逻辑，返回 /
-      if (request.destination === "document") {
-        return await caches.match(new Request("/"));
-      }
+    }
+    // 检查目标是否为 document，如果是的话，走 SPA 逻辑，返回 /
+    if (request.destination === "document") {
+      return await caches.match(new Request("/"));
     }
   }
 }
