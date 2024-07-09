@@ -23,6 +23,7 @@ function uint8ArrayToInt16Array(uint8Array: Uint8Array) {
 }
 
 const audio = ref();
+const loading = ref(false);
 
 const form = reactive({
   target: "MP3",
@@ -31,48 +32,55 @@ const form = reactive({
 });
 
 async function handleTransfer() {
-  const audioFile = audio.value.files[0];
-  const buffer = await audioFile.arrayBuffer();
-  if (!isSilk(buffer)) {
-    error("不是silk音频");
-    return;
-  }
-  // PCM Encode
-  if (form.target === "PCM") {
-    const res = await decode(buffer, Number(form.rate));
-    const downloadManager = await createDownloadManager(
-      `${audioFile.name}.pcm`,
-      {
-        "audio/*": ".pcm",
-      },
-      false,
-    );
-    downloadManager.write(res.data);
-    downloadManager.close();
-  }
-  if (form.target === "MP3") {
-    const res = await decode(buffer, Number(form.rate));
+  try {
+    loading.value = true;
+    const audioFile = audio.value.files[0];
+    const buffer = await audioFile.arrayBuffer();
+    if (!isSilk(buffer)) {
+      error("不是silk音频");
+      return;
+    }
+    // PCM Encode
+    if (form.target === "PCM") {
+      const res = await decode(buffer, Number(form.rate));
+      const downloadManager = await createDownloadManager(
+        `${audioFile.name}.pcm`,
+        {
+          "audio/*": ".pcm",
+        },
+        false,
+      );
+      downloadManager.write(res.data);
+      downloadManager.close();
+    }
+    if (form.target === "MP3") {
+      const res = await decode(buffer, Number(form.rate));
 
-    const mp3encoder = new window.lamejs.Mp3Encoder(1, Number(form.rate), Number(form.kbps));
-    const mp3Data = [];
+      const mp3encoder = new window.lamejs.Mp3Encoder(1, Number(form.rate), Number(form.kbps));
+      const mp3Data = [];
 
-    const samples = uint8ArrayToInt16Array(res.data);
-    const sampleBlockSize = 1152;
+      const samples = uint8ArrayToInt16Array(res.data);
+      const sampleBlockSize = 1152;
 
-    for (let i = 0; i < samples.length; i += sampleBlockSize) {
-      const sampleChunk = samples.subarray(i, i + sampleBlockSize);
-      const mp3buf = mp3encoder.encodeBuffer(sampleChunk);
-      if (mp3buf.length > 0) {
-        mp3Data.push(mp3buf);
+      for (let i = 0; i < samples.length; i += sampleBlockSize) {
+        const sampleChunk = samples.subarray(i, i + sampleBlockSize);
+        const mp3buf = mp3encoder.encodeBuffer(sampleChunk);
+        if (mp3buf.length > 0) {
+          mp3Data.push(mp3buf);
+        }
       }
-    }
-    const mp3buf = mp3encoder.flush(); //finish writing mp3
-    if (mp3buf.length > 0) {
-      mp3Data.push(new Int8Array(mp3buf));
-    }
+      const mp3buf = mp3encoder.flush(); //finish writing mp3
+      if (mp3buf.length > 0) {
+        mp3Data.push(new Int8Array(mp3buf));
+      }
 
-    const mp3Result = new Blob(mp3Data, { type: "audio/mp3" });
-    downloadBlob(mp3Result, `${audioFile.name}.mp3`);
+      const mp3Result = new Blob(mp3Data, { type: "audio/mp3" });
+      downloadBlob(mp3Result, `${audioFile.name}.mp3`);
+    }
+  } catch (e: any) {
+    error(e?.message ?? "转码失败");
+  } finally {
+    loading.value = false;
   }
 }
 </script>
@@ -100,6 +108,7 @@ async function handleTransfer() {
       </select>
 
       <button type="button" class="btn btn-primary" @click="handleTransfer">
+        <span v-if="loading" class="loading loading-spinner"></span>
         转码
       </button>
     </div>
