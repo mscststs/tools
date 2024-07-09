@@ -44,7 +44,7 @@
     "typescript": "^5.0.2",
     "vite": "latest",
     "vite-plugin-wasm": "^3.3.0",
-    "vue-tsc": "^1.8.5"
+    "vue-tsc": "latest"
   },
   "repository": {
     "type": "git",
