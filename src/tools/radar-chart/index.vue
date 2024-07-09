@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect, reactive } from "vue";
 import { error } from "../../components/message";
-import { getImage, formatTime, sleep, createBlob, createDownloadManager, FrameController, isEscaped } from "../../utils";
+import {
+  getImage,
+  formatTime,
+  sleep,
+  createBlob,
+  createDownloadManager,
+  FrameController,
+  isEscaped,
+} from "../../utils";
 import { mmcRadar } from "./data.ts";
 import prompt from "./recorder-prompt.tsx";
 // import jsZip from "jszip";
 import { Zip, ZipDeflate } from "fflate";
-
 
 function getTimeVariables(date: Date) {
   const vars: ObjectData = {
@@ -20,27 +27,24 @@ function getTimeVariables(date: Date) {
     DATE: date.getDate(),
     HOUR: date.getHours(),
     MINUTE: date.getMinutes(),
-  }
+  };
   Object.keys(vars).forEach((key) => {
     vars[key] = vars[key].toString().padStart(2, "0");
   });
   return vars;
-
 }
-
 
 const form = reactive({
   selectArea: mmcRadar[0].name,
   selectDuration: 3 * 60 * 60 * 1000,
-  selectedProxy: isEscaped() ? "escape" : "appmask"
+  selectedProxy: isEscaped() ? "escape" : "appmask",
 });
 
 const selectArea = computed<UrlTemplate | null>(() => {
-  return mmcRadar.find(item => form.selectArea === item.name) || null;
+  return mmcRadar.find((item) => form.selectArea === item.name) || null;
 });
 
-const loadedArea = ref<UrlTemplate>()
-
+const loadedArea = ref<UrlTemplate>();
 
 /**
  * 根据
@@ -48,42 +52,41 @@ const loadedArea = ref<UrlTemplate>()
 function getUrls(tmpl: UrlTemplate, duration: number) {
   const cur = Date.now() - tmpl.delay;
   const tsMin = cur - duration;
-  let tail = cur - cur % tmpl.interval;
+  let tail = cur - (cur % tmpl.interval);
   const result = [];
   while (tail > tsMin) {
     result.push(tail);
-    tail -= tmpl.interval
+    tail -= tmpl.interval;
   }
 
-
-  return result.map(ts => {
+  return result.map((ts) => {
     let url = tmpl.url;
     const timeVars = getTimeVariables(new Date(ts));
     url = url.replace(/\$\{(.+?)\}/g, (_, fn1) => {
       if (fn1 in timeVars) {
-        return "" + timeVars[fn1 as keyof typeof timeVars]
+        return `${timeVars[fn1 as keyof typeof timeVars]}`;
       }
       return fn1;
     });
     const seq: Seq = {
       url,
       ts,
-      status: "loading"
-    }
+      status: "loading",
+    };
     return seq;
   });
 }
 
-let seqs = ref<Seq[]>([]);
+const seqs = ref<Seq[]>([]);
 
 const loadedSeq = computed(() => {
-  return seqs.value.filter(item => {
-    return item.status === "loaded"
-  })
+  return seqs.value.filter((item) => {
+    return item.status === "loaded";
+  });
 });
 
-let loading = ref(false);
-let recording = ref(false);
+const loading = ref(false);
+const recording = ref(false);
 /**
  * 创建序列并加载图片
  */
@@ -111,24 +114,22 @@ async function createSequence() {
       }
     } catch (e: any) {
       if (e instanceof Error) {
-        error(e)
+        error(e);
       }
     } finally {
       loading.value = false;
     }
   }
-};
+}
 
-
-let currentView = ref("0");
+const currentView = ref("0");
 
 const ImageCanvas = ref();
 
-
 watchEffect(() => {
   if (currentView.value && ImageCanvas.value) {
-    const seq = loadedSeq.value.find(item => item.ts == parseInt(currentView.value));
-    if (seq && seq.node) {
+    const seq = loadedSeq.value.find((item) => item.ts === Number.parseInt(currentView.value));
+    if (seq?.node) {
       const ctx = ImageCanvas.value?.getContext("2d");
       ctx.drawImage(seq.node, 0, 0);
     }
@@ -139,20 +140,20 @@ const zipLoading = ref(false);
 async function zipDownload() {
   if (zipLoading.value) {
     zipLoading.value = false;
-    return
+    return;
   }
   zipLoading.value = true;
   try {
     if (!loadedArea.value) {
-      return
+      return;
     }
 
     const downloadManager = await createDownloadManager(
-      `RadarPack_${selectArea.value?.name ?? ['未知']}_${formatTime()}.zip`,
+      `RadarPack_${selectArea.value?.name ?? ["未知"]}_${formatTime()}.zip`,
       {
-        "application/zip": ".zip"
+        "application/zip": ".zip",
       },
-      true
+      true,
     );
 
     const zip = new Zip((err, dat, final) => {
@@ -165,7 +166,7 @@ async function zipDownload() {
         downloadManager.close();
       }
     });
-    for (let item of loadedSeq.value) {
+    for (const item of loadedSeq.value) {
       if (!zipLoading.value) {
         break;
       }
@@ -179,7 +180,7 @@ async function zipDownload() {
     zip.end();
   } catch (e) {
     if (e instanceof Error) {
-      error(e)
+      error(e);
     }
   } finally {
     zipLoading.value = false;
@@ -200,37 +201,37 @@ async function record() {
       const frameController = new FrameController(speed);
 
       const downloadManager = await createDownloadManager(
-        `RadarRecord_${selectArea.value?.name ?? ['未知']}_${formatTime()}.webm`,
+        `RadarRecord_${selectArea.value?.name ?? ["未知"]}_${formatTime()}.webm`,
         {
-          [mimeType.split(";")[0]]: `.${mimeType.split(";")[0].split("/")[1]}`
+          [mimeType.split(";")[0]]: `.${mimeType.split(";")[0].split("/")[1]}`,
         },
-        true
-      )
+        true,
+      );
 
       const mediaRecorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond });
       mediaRecorder.ondataavailable = async (event: any) => {
         downloadManager.write(new Uint8Array(await event.data.arrayBuffer()));
       };
       mediaRecorder.onerror = (event: any) => {
-        error(event.error as Error)
+        error(event.error as Error);
         recording.value = false;
-      }
+      };
       mediaRecorder.onstop = async () => {
-        await sleep(500)
-        downloadManager.close()
-      }
+        await sleep(500);
+        downloadManager.close();
+      };
 
       let index = 0;
       let bufferTimeStamp = Date.now();
 
       currentView.value = loadedSeq.value[index].ts.toString();
       mediaRecorder.start();
-      while (recording.value && (parseInt(currentView.value) < loadedSeq.value[loadedSeq.value.length - 1].ts)) {
+      while (recording.value && Number.parseInt(currentView.value) < loadedSeq.value[loadedSeq.value.length - 1].ts) {
         await frameController.nextFrame();
         index += 1;
         currentView.value = loadedSeq.value[index].ts.toString();
 
-        const currentTs = Date.now()
+        const currentTs = Date.now();
         if (currentTs - bufferTimeStamp > 1000) {
           // 每1秒写一次缓存
           mediaRecorder.requestData();
@@ -242,17 +243,13 @@ async function record() {
       mediaRecorder.stop();
     } catch (e) {
       if (e instanceof Error) {
-        error(e)
+        error(e);
       }
-
     } finally {
       recording.value = false;
     }
   }
 }
-
-
-
 </script>
 
 <template>

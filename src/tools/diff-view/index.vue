@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { useLocalStorage, usePreferredColorScheme } from '@vueuse/core';
-
+import { ref, watch } from "vue";
+import { useLocalStorage, usePreferredColorScheme } from "@vueuse/core";
 
 const OPTIONS = {
   automaticLayout: true,
@@ -11,39 +10,25 @@ const OPTIONS = {
 
 const theme = ref("vs-dark");
 const language = ref("plaintext");
-const languages = [
-  "plaintext",
-  "javascript",
-  "html",
-  "css"
-];
-
+const languages = ["plaintext", "javascript", "html", "css"];
 
 const el = ref();
 const siteTheme = useLocalStorage("theme", "");
 const preferredColor = usePreferredColorScheme();
 
-
-
 // 检查主题色并切换 monaco 主题
-watch(
-  [siteTheme, el, preferredColor],
-  () => {
-    if (el.value) {
-      const v = window.getComputedStyle(el.value);
-      const bgColor = v.backgroundColor;
-      const matches = bgColor.match(/\d+/g)?.map(v => parseInt(v));
-      if (matches && matches.length === 3) {
-        const [r, g, b] = matches;
-        const isLight = (r + g + b) / 3 > 128 ? true : false;
-        theme.value = isLight ? "vs" : "vs-dark";
-      }
+watch([siteTheme, el, preferredColor], () => {
+  if (el.value) {
+    const v = window.getComputedStyle(el.value);
+    const bgColor = v.backgroundColor;
+    const matches = bgColor.match(/\d+/g)?.map((v) => Number.parseInt(v));
+    if (matches && matches.length === 3) {
+      const [r, g, b] = matches;
+      const isLight = (r + g + b) / 3 > 128;
+      theme.value = isLight ? "vs" : "vs-dark";
     }
-  });
-
-
-
-
+  }
+});
 </script>
 
 <template>

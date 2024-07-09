@@ -21,19 +21,19 @@
     "vue3-marquee": "^4.1.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.0.0",
+    "@biomejs/biome": "^1.8.3",
     "@iconify-icons/fa-solid": "^1.2.4",
     "@iconify-icons/heroicons-outline": "^1.2.5",
+    "@iconify-icons/icon-park-outline": "^1.2.11",
     "@iconify-icons/line-md": "^1.2.26",
     "@iconify-icons/logos": "^1.2.34",
     "@iconify-icons/mdi": "^1.2.47",
     "@iconify-icons/mingcute": "^1.2.7",
-    "@iconify-icons/icon-park-outline": "^1.2.11",
     "@iconify/vue": "^4.1.1",
     "@types/node": "^20.5.8",
     "@types/wicg-file-system-access": "^2020.9.6",
-    "@vitejs/plugin-vue": "^4.2.3",
-    "@vitejs/plugin-vue-jsx": "^3.0.2",
+    "@vitejs/plugin-vue": "latest",
+    "@vitejs/plugin-vue-jsx": "latest",
     "autoprefixer": "^10.4.15",
     "daisyui": "^3.6.4",
     "postcss": "^8.4.29",
@@ -41,14 +41,17 @@
     "scss": "^0.2.4",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.0.2",
-    "vite": "^4.4.5",
+    "vite": "latest",
     "vue-tsc": "^1.8.5"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mscststs/tools.git"
   },
-  "keywords": ["tools", "javascript"],
+  "keywords": [
+    "tools",
+    "javascript"
+  ],
   "author": "mscststs",
   "license": "MIT",
   "bugs": {

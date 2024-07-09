@@ -69,9 +69,8 @@ async function getFileStream(filename: string, type: FilePickerAcceptType["accep
       });
       const writable = await fileHandle.createWritable();
       return writable;
-    } else {
-      throw new Error("showSaveFilePicker Not Ready");
     }
+    throw new Error("showSaveFilePicker Not Ready");
   } catch (e) {
     return null;
   }
@@ -113,9 +112,8 @@ async function getServiceWorkerStream(filename: string) {
         );
       });
       return stream;
-    } else {
-      throw new Error("serviceWorker Not Ready");
     }
+    throw new Error("serviceWorker Not Ready");
   } catch (e) {
     return null;
   }

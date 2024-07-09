@@ -1,4 +1,4 @@
-import { Plugin } from "vue";
+import type { Plugin } from "vue";
 
 const plugin: Plugin = {
   install: (app) => {

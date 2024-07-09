@@ -3,7 +3,7 @@ import { ref, onBeforeUnmount, watchEffect, reactive } from "vue";
 import { useClipboard } from "@vueuse/core";
 import { success, error } from "../../components/message";
 import getPeerId from "./peerid-prompt";
-import getUserMediaOptions from "./userMedia-prompt"
+import getUserMediaOptions from "./userMedia-prompt";
 import { formatTime } from "../../utils";
 
 const peer = new window.Peer();
@@ -17,14 +17,13 @@ const chatInput = ref("");
 const chatHistory = reactive<ChatItem[]>([]);
 const chatHistoryView = ref();
 
-
 watchEffect(() => {
   if (chatHistory.length && chatHistoryView.value) {
     setTimeout(() => {
       chatHistoryView.value.scrollTop = chatHistoryView.value.scrollHeight;
     }, 100);
   }
-})
+});
 
 const { copy, copied } = useClipboard();
 watchEffect(() => {
@@ -59,7 +58,7 @@ peer.on("call", (call: any) => {
     addSystemInfo("对方关闭了视频");
     remoteMediaConnection.value = null;
     remoteVideoRef.value.srcObject = null;
-  })
+  });
   remoteMediaConnection.value = call;
 });
 
@@ -87,57 +86,51 @@ watchEffect(() => {
     mediaConnection.value.on("close", () => {
       addSystemInfo("已断开视频连接");
       if (userMediaStream.value) {
-        userMediaStream.value.getTracks().forEach(track => track.stop());
+        userMediaStream.value.getTracks().forEach((track) => track.stop());
         userMediaStream.value = undefined;
       }
       mediaConnection.value = null;
     });
   }
-})
+});
 
 const myVideoRef = ref();
 const remoteVideoRef = ref();
-
 
 /**
  * 处理远程消息回调
  */
 async function handleRemoteChatMessage(data: any) {
   if (data.type === "text") {
-
     chatHistory.push({
       ...data,
       from: "other",
-    })
+    });
   } else if (data.type === "image") {
     const blob = new Blob([data.data], { type: "image/*" });
     chatHistory.push({
       ...data,
       url: URL.createObjectURL(blob),
       from: "other",
-    })
+    });
   }
 }
 
-
-
-
 async function handleCreateConnection() {
-  let { peerid } = await getPeerId();
+  const { peerid } = await getPeerId();
   remotePeerId.value = peerid;
   dataConnection.value = peer.connect(peerid);
-};
+}
 
 async function handleCloseConnection() {
-
   if (userMediaStream.value) {
-    userMediaStream.value.getTracks().forEach(track => track.stop());
+    userMediaStream.value.getTracks().forEach((track) => track.stop());
     userMediaStream.value = undefined;
   }
   mediaConnection.value?.close();
   remoteMediaConnection.value?.close();
   dataConnection.value?.close();
-};
+}
 
 function addSystemInfo(msg: string) {
   const message = createChatMessage("info", msg);
@@ -147,35 +140,36 @@ function addSystemInfo(msg: string) {
   });
 }
 
-
-function createChatMessage(type = "text", data: string | ArrayBuffer) {
+function createChatMessage(type: string, data: string | ArrayBuffer) {
   if (type === "text") {
     return {
       type: "text",
       ts: Date.now(),
-      data: data
-    }
-  } else if (type === "image") {
+      data: data,
+    };
+  }
+  if (type === "image") {
     return {
       type: "image",
       ts: Date.now(),
-      data: data
-    }
-  } else if (type === "info") {
+      data: data,
+    };
+  }
+  if (type === "info") {
     return {
       type: "info",
       ts: Date.now(),
-      data: data
-    }
+      data: data,
+    };
   }
   throw new Error("unsupported Type");
 }
 
-function createDataMessage(type = "chat", data: any) {
+function createDataMessage(type: string, data: any) {
   return {
     as: type,
     data,
-  }
+  };
 }
 
 async function sendText() {
@@ -203,20 +197,19 @@ async function sendImage(blob: Blob) {
   dataConnection.value?.send(createDataMessage("chat", chatObject));
 }
 
-
 /**
  * 处理粘贴图片事件
- * @param e 
+ * @param e
  */
 async function handleReadPaste(e: ClipboardEvent) {
   if (e?.clipboardData?.items) {
-    const image = [...e?.clipboardData?.items].find(item => {
+    const image = [...e.clipboardData.items].find((item) => {
       return item.kind === "file" && item.type.startsWith("image/");
     });
     if (image) {
       const imageFile = image?.getAsFile();
       if (imageFile) {
-        const blob = new Blob([imageFile], { type: image.type || 'application/*' });
+        const blob = new Blob([imageFile], { type: image.type || "application/*" });
         sendImage(blob);
       }
     } else {
@@ -229,7 +222,7 @@ const userMediaStream = ref<MediaStream>();
 
 async function handleReadUserMedia() {
   if (userMediaStream.value) {
-    userMediaStream.value.getTracks().forEach(track => track.stop());
+    userMediaStream.value.getTracks().forEach((track) => track.stop());
     mediaConnection.value.close();
     userMediaStream.value = undefined;
     myVideoRef.value.srcObject = null;
@@ -252,9 +245,6 @@ async function handleReadUserMedia() {
     error(e);
   }
 }
-
-
-
 </script>
 
 <template>

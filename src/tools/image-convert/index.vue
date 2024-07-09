@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { usePermission } from "@vueuse/core";
-import { error, success } from "../../components/message"
+import { error, success } from "../../components/message";
 import { ref, reactive, watch } from "vue";
 import { filesize } from "filesize";
 import { createBlob, getImage, download, formatTime, createCanvas } from "../../utils";
 
-
 const supportClipBoard = !!navigator?.clipboard?.read ?? false;
 const accessClipboard = usePermission("clipboard-read");
-
 
 const imgRef = ref();
 const imgSrc = ref("");
@@ -31,7 +29,6 @@ function setTargetImage(blob: Blob) {
   targetImageSrc.value = dataUrl;
 }
 
-
 async function handleReadClipboard() {
   try {
     const clipboardContents = await navigator.clipboard.read();
@@ -48,35 +45,30 @@ async function handleReadClipboard() {
 }
 
 async function handleReadFile(event: Event) {
-  const target = event.target as HTMLInputElement
-  if (target.files && target.files[0]) {
+  const target = event.target as HTMLInputElement;
+  if (target.files?.[0]) {
     const file = target.files[0];
     if (file.type.startsWith("image")) {
-
-      const blob = new Blob([file], { type: file.type || 'application/*' });
+      const blob = new Blob([file], { type: file.type || "application/*" });
       setOriginImage(blob);
 
       target.value = "";
-
     } else {
-      error("不支持的格式")
+      error("不支持的格式");
       throw new Error("Format Not support");
     }
   }
 }
 
-
-
 async function handleReadPaste(e: ClipboardEvent) {
   if (e?.clipboardData?.items) {
-    const image = [...e?.clipboardData?.items].find(item => {
-      return item.kind === "file" && item.type.startsWith("image/")
+    const image = [...e.clipboardData.items].find((item) => {
+      return item.kind === "file" && item.type.startsWith("image/");
     });
     if (image) {
       const imageFile = image?.getAsFile();
       if (imageFile) {
-
-        const blob = new Blob([imageFile], { type: image.type || 'application/*' });
+        const blob = new Blob([imageFile], { type: image.type || "application/*" });
         setOriginImage(blob);
       }
     } else {
@@ -89,14 +81,13 @@ async function handleReadDrop(event: DragEvent) {
   event.preventDefault();
   event.stopPropagation();
   if (event?.dataTransfer?.items) {
-    const image = [...event.dataTransfer.items].find(item => {
-      return item.kind === "file" && item.type.startsWith("image/")
+    const image = [...event.dataTransfer.items].find((item) => {
+      return item.kind === "file" && item.type.startsWith("image/");
     });
     if (image) {
       const imageFile = image?.getAsFile();
       if (imageFile) {
-
-        const blob = new Blob([imageFile], { type: image.type || 'application/*' });
+        const blob = new Blob([imageFile], { type: image.type || "application/*" });
         setOriginImage(blob);
       }
     } else {
@@ -107,7 +98,7 @@ async function handleReadDrop(event: DragEvent) {
 
 async function handleDownload() {
   if (targetImageSrc.value) {
-    download(targetImageSrc.value, `image_convert_${formatTime()}.${form.type.split("/")[1]}`)
+    download(targetImageSrc.value, `image_convert_${formatTime()}.${form.type.split("/")[1]}`);
   }
 }
 async function handleWriteClipBoard() {
@@ -130,19 +121,18 @@ const maskStyle = ref("-webkit-mask-image : linear-gradient(to right, transparen
 const splitStyle = ref("left:50%");
 /**
  * @description 处理移动预览事件
- * @param event 
+ * @param event
  */
 async function handleChangeSplitLine(event: MouseEvent) {
-  if (event.buttons && (event.buttons & 1)) {
+  if (event.buttons && event.buttons & 1) {
     if (touchPanel.value) {
       const offsetleft = touchPanel.value.getBoundingClientRect().x;
       const fullWidth = touchPanel.value.clientWidth;
       const eventWidth = event.clientX;
       const targetPos = ((eventWidth - offsetleft) / fullWidth) * 100;
-      maskStyle.value = `-webkit-mask-image : linear-gradient(to right, transparent ${targetPos}% , ${targetPos}%, #fff 100% );`
-      splitStyle.value = `left: ${targetPos}%;`
+      maskStyle.value = `-webkit-mask-image : linear-gradient(to right, transparent ${targetPos}% , ${targetPos}%, #fff 100% );`;
+      splitStyle.value = `left: ${targetPos}%;`;
     }
-
   }
 }
 
@@ -150,7 +140,6 @@ const form = reactive({
   type: "image/png",
   quality: "0.8",
 });
-
 
 // 处理压缩
 watch([imgSrc, form], async () => {
@@ -161,19 +150,18 @@ watch([imgSrc, form], async () => {
       const canvas = await createCanvas(image);
       const context = canvas.getContext("2d");
       const data = context?.getImageData(0, 0, image.width, image.height).data;
-      const quality = parseFloat(form.quality);
+      const quality = Number.parseFloat(form.quality);
       const cnum = quality === 1 ? 0 : Math.max(2, Math.ceil(256 * quality));
       const res = window.UPNG.encode([data?.buffer], image.width, image.height, cnum);
       setTargetImage(new Blob([res], { type: "image/png" }));
     } else {
       // 使用 Canvas.toBlob处理
       const image = await getImage(imgSrc.value, "");
-      const blob = await createBlob(image, form.type, parseFloat(form.quality));
+      const blob = await createBlob(image, form.type, Number.parseFloat(form.quality));
       setTargetImage(blob);
     }
   }
 });
-
 </script>
 
 <template>

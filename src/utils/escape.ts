@@ -39,7 +39,6 @@ export function install() {
 export function isEscaped() {
   if (window?.escape.version === requestEscapeVersion) {
     return true;
-  } else {
-    return false;
   }
+  return false;
 }

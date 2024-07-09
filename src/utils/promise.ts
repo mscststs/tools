@@ -6,7 +6,7 @@ import { sleep } from ".";
  * @param timeout
  * @returns
  */
-export const timeout = (promise: Promise<any> | Function, timeout = 3000) => {
+export const timeout = (promise: Promise<any> | (() => void), timeout = 3000) => {
   return Promise.race([
     (async () => {
       await sleep(timeout);
@@ -16,7 +16,7 @@ export const timeout = (promise: Promise<any> | Function, timeout = 3000) => {
   ]);
 };
 
-export const anySuccess = async (cbs: Function[]) => {
+export const anySuccess = async (cbs: (() => void)[]) => {
   let lastE = null;
   for (const item of cbs) {
     try {
