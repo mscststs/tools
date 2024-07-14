@@ -9,6 +9,8 @@ import { useElementSize, useFullscreen } from '@vueuse/core'
 const el = ref(null);
 const inputEl = ref(null);
 
+const pause = ref(false);
+
 const { width, height } = useElementSize(el);
 const { toggle } = useFullscreen(el)
 
@@ -22,6 +24,9 @@ const form = reactive({
 
 function handleFullScreen() {
   toggle();
+}
+function handlePause() {
+  pause.value = !pause.value;
 }
 
 </script>
@@ -76,15 +81,16 @@ function handleFullScreen() {
     </div>
     <div class="divider"></div>
     <div class="flex flex-row flex-auto border border-primary overflow-hidden select-none bg-base-100" ref="el"
-      @dblclick="handleFullScreen">
+      @dblclick="handleFullScreen" @click="handlePause">
       <Vue3Marquee class="!absolute overflow-hidden" :duration="form.duration" :style="{
         height: `${height}px`,
         width: `${width}px`,
         fontSize: `${height * form.scale}px`,
         lineHeight: `${height}px`,
         letterSpacing: `${height * form.scale * form.spacing}px`,
-        color: `${form.color ? form.color : 'inherit'}`
-      }">
+        color: `${form.color ? form.color : 'inherit'}`,
+        pointerEvents: 'none'
+      }" :pause="pause">
         {{ form.text }}
       </Vue3Marquee>
 

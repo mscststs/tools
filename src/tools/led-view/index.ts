@@ -1,5 +1,5 @@
 export const ledView: Tool = {
-  id: "les-view",
+  id: "led-view",
   name: "LED 灯牌",
   icon: "ext:movieboard",
   type: "utils",

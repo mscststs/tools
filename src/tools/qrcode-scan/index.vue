@@ -71,7 +71,7 @@ async function handleReadDisplay() {
       audio: false,
     });
     try {
-      const dataUrl = await startCapture(mediaStream);
+      const dataUrl = await startCapture({ mediaStream });
       imgSrc.value = dataUrl;
     } catch (e: any) {
       console.error(e);
@@ -89,7 +89,7 @@ async function handleReadUserMedia() {
       audio: false,
     });
     try {
-      const dataUrl = await startCapture(mediaStream);
+      const dataUrl = await startCapture({ mediaStream });
       imgSrc.value = dataUrl;
     } catch (e: any) {
       console.error(e);

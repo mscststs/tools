@@ -1,5 +1,6 @@
 import { createApp, onMounted, ref } from "vue";
 import { createBlob } from "../../utils";
+import { useEventListener } from "@vueuse/core";
 
 const addElement = () => {
   const div = document.createElement("div");
@@ -12,7 +13,11 @@ const addElement = () => {
   };
 };
 
-const startCapture = async (mediaStream: MediaStream): Promise<string> => {
+const startCapture = async ({
+  mediaStream,
+}: {
+  mediaStream: MediaStream;
+}): Promise<string> => {
   const { element, removeElement } = addElement();
 
   return new Promise<string>((resolve, reject) => {
@@ -20,6 +25,10 @@ const startCapture = async (mediaStream: MediaStream): Promise<string> => {
       setup: () => {
         const videoRef = ref();
         const dialogRef = ref();
+
+        useEventListener(window, "popstate", () => {
+          dialogRef.value.close();
+        });
 
         onMounted(() => {
           dialogRef.value.showModal();

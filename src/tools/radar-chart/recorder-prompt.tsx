@@ -1,4 +1,5 @@
 import { createApp, onMounted, ref } from "vue";
+import { useEventListener } from "@vueuse/core";
 
 const addElement = () => {
   const div = document.createElement("div");
@@ -32,6 +33,10 @@ const prompt = async (): Promise<any> => {
 
         const dialogRef = ref();
         const formRef = ref();
+
+        useEventListener(window, "popstate", () => {
+          dialogRef.value.close();
+        });
 
         onMounted(() => {
           dialogRef.value.showModal();
