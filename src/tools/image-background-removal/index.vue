@@ -2,8 +2,7 @@
 import { usePermission } from "@vueuse/core";
 import { error, success } from "../../components/message";
 import { ref, reactive, watch, onUnmounted } from "vue";
-import { filesize } from "filesize";
-import { createBlob, getImage, download, formatTime, createCanvas } from "../../utils";
+import { getImage, download, formatTime } from "../../utils";
 
 const supportWebgpu = !!navigator.gpu;
 const showSupportAlert = ref(true);
