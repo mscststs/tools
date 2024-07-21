@@ -14,7 +14,7 @@ async function loadDependencies(dependencies: Dependencies[], loadStatus: Ref<st
           await loadDependencies(dependency.dependencies, loadStatus);
         }
 
-        const urls = dependency.urls?.length ? dependency.urls : [dependency.url];
+        const urls = dependency.urls || [];
 
         loadStatus.value = `正在加载: ${dependency.name}`;
         await anySuccess(

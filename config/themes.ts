@@ -24,7 +24,7 @@ const themes = [
       "--tab-radius": "0.5rem",
     },
     business: {
-      ...daisy["[data-theme=business]"],
+      ...daisy.business,
       "--rounded-box": "0.125rem",
     },
   },
@@ -57,6 +57,9 @@ const themes = [
   "night",
   "coffee",
   "winter",
+  "dim",
+  "nord",
+  "sunset",
 ];
 
 export default themes;
@@ -64,10 +67,38 @@ export default themes;
 /**
  * 所有主题的名字
  */
-export const themeNames = themes.reduce((p: any, c) => {
-  if (typeof c === "object") {
-    return [...p, ...Object.keys(c)];
-  } else {
-    return [...p, c];
-  }
-}, []);
+export const themeNames = [
+  "lite",
+  "business",
+  "light",
+  "dark",
+  "wireframe",
+  "lofi",
+  "cupcake",
+  "bumblebee",
+  "emerald",
+  "corporate",
+  "synthwave",
+  "retro",
+  "cyberpunk",
+  "valentine",
+  "halloween",
+  "garden",
+  "forest",
+  "aqua",
+  "pastel",
+  "fantasy",
+  "black",
+  "luxury",
+  "dracula",
+  "cmyk",
+  "autumn",
+  "acid",
+  "lemonade",
+  "night",
+  "coffee",
+  "winter",
+  "dim",
+  "nord",
+  "sunset",
+];

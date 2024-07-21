@@ -1,4 +1,4 @@
-type ToolTypes = "utils" | "transform" | "encode" | "visual";
+type ToolTypes = "utils" | "media" | "encode" | "visual";
 
 interface Dependencies {
   /**
@@ -9,10 +9,6 @@ interface Dependencies {
    * 依赖类型
    */
   type: "js" | "css";
-  /**
-   * 依赖加载地址
-   */
-  url?: string;
   /**
    * 可以提供多个地址，作为备份，加载器会顺序尝试每个地址直到成功
    */
@@ -33,7 +29,7 @@ interface Tool {
    */
   name: string;
   /**
-   * 图表
+   * 图标
    */
   icon: string;
   /**
@@ -48,4 +44,9 @@ interface Tool {
    * 依赖项
    */
   dependencies?: Dependencies[];
+}
+
+interface ToolGroup {
+  key: ToolTypes;
+  name: string;
 }

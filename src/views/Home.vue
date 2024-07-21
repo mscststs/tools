@@ -3,6 +3,7 @@ import { reactive } from "vue";
 import { useRouter, } from 'vue-router';
 import { tools, createLoader } from "../tools/";
 import { error } from "../components/message";
+import toolGroups from "../tools/groups";
 
 const router = useRouter();
 
@@ -37,16 +38,21 @@ const loadTool = async (tool: (typeof toolList)[0]) => {
 </script>
 
 <template>
-  <div class="font-bold flex flex-row gap-4">
-    <div class="list flex flex-row flex-wrap gap-4 justify-start content-start">
-      <div class="btn btn-primary flex-none" @click="loadTool(tool)" v-for="tool of toolList" :key="tool.id">
-        <div class="swap" :class="tool.loading ? 'swap-active' : ''">
-          <span class="swap-on loading loading-spinner loading-xs"></span>
-          <i-icon :icon="tool.icon" class="swap-off w-4 h-4"></i-icon>
-        </div>
+  <div class="flex flex-col gap-4 font-bold  max-w-full mx-auto">
+    <div class="flex flex-col mb-8" v-for="group of toolGroups" :key="group.key">
+      <div class="title flex-none mb-4">{{ group.name }}</div>
 
-        <span class="font-normal">{{ tool.name }}</span>
+      <div class="list flex flex-row flex-wrap gap-4 justify-start content-start">
+        <div class="btn btn-primary flex-none" @click="loadTool(tool)"
+          v-for="tool of toolList.filter(item => item.type === group.key)" :key="tool.id">
+          <div class="swap" :class="tool.loading ? 'swap-active' : ''">
+            <span class="swap-on loading loading-spinner loading-xs"></span>
+            <i-icon :icon="tool.icon" class="swap-off w-4 h-4"></i-icon>
+          </div>
+          <span class="font-normal">{{ tool.name }}</span>
+        </div>
       </div>
+
     </div>
   </div>
 </template>

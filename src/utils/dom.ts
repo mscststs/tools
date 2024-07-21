@@ -5,8 +5,11 @@ type Options = {
 
 export function addElement(tag = "script", options: Options = {}, parent = document.body) {
   const ele = document.createElement(tag);
+
   Object.entries(options).forEach(([key, val]) => {
-    if (!["onload", "onerror"].includes(key)) {
+    if (key === "innerText") {
+      (ele as HTMLScriptElement).innerText = val;
+    } else if (!["onload", "onerror"].includes(key)) {
       ele.setAttribute(key, val);
     }
   });

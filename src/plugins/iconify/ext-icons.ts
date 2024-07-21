@@ -22,6 +22,9 @@ export { default as webrtc } from "@iconify-icons/mdi/webrtc";
 export { default as videooutline } from "@iconify-icons/mdi/video-outline";
 export { default as diffwiew } from "@iconify-icons/mdi/vector-difference-ab";
 export { default as analytics } from "@iconify-icons/mdi/analytics";
+export { default as image360 } from "@iconify-icons/mdi/image-360-outline";
+export { default as imageadjust } from "@iconify-icons/mdi/image-auto-adjust";
+export { default as warning } from "@iconify-icons/mdi/warning-outline";
 
 // logos
 export { default as vue } from "@iconify-icons/logos/vue";

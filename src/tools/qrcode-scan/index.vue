@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watchEffect } from "vue";
-import QrScanner from "qr-scanner";
 import { useClipboard, usePermission } from "@vueuse/core";
 import startCapture from "./capture";
 import { error } from "../../components/message";
@@ -140,7 +139,7 @@ watchEffect(async () => {
   if (imgSrc.value) {
     result.value = "";
     try {
-      const { data: res } = await QrScanner.scanImage(imgSrc.value, {
+      const { data: res } = await window.QrScanner.scanImage(imgSrc.value, {
         alsoTryWithoutScanRegion: true,
       });
       result.value = res;

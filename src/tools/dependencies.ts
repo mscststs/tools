@@ -7,12 +7,14 @@ export const pako: Dependencies = {
   type: "js",
   urls: ["/lib/pako.min.js", "https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"],
 };
+
 export const upng: Dependencies = {
   name: "UPNG",
   type: "js",
   urls: ["/lib/UPNG.js", "https://cdn.jsdelivr.net/npm/upng-js@2.1.0/UPNG.min.js"],
   dependencies: [pako],
 };
+
 export const peerjs: Dependencies = {
   name: "peerjs",
   type: "js",
@@ -40,5 +42,15 @@ export const lamejs: Dependencies = {
     "/lib/lame.all.js",
     "https://cdn.jsdelivr.net/npm/lamejs@latest/lame.all.js",
     "https://unpkg.com/lamejs@latest/lame.all.js",
+  ],
+};
+
+export const qrScanner: Dependencies = {
+  name: "QrScanner",
+  type: "js",
+  urls: [
+    "/lib/qr-scanner.umd.min.js",
+    "https://cdn.jsdelivr.net/npm/qr-scanner@1.4.2/qr-scanner.umd.min.js",
+    "https://unpkg.com/qr-scanner@1.4.2/qr-scanner.umd.min.js",
   ],
 };
