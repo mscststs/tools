@@ -13,7 +13,7 @@ const accessClipboard = usePermission("clipboard-read");
 const modelReady = ref(false);
 const modelStatus = ref("");
 
-const worker = new Worker(new URL('./worker.js', import.meta.url), {
+const worker = new Worker("/worker/image_bg_removal_worker.js", {
   type: 'module'
 });
 

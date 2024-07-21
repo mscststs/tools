@@ -1,4 +1,4 @@
-import { AutoProcessor, AutoModel, Tensor, env, RawImage } from "/lib/transformers.min.js?url";
+import { AutoProcessor, AutoModel, Tensor, env, RawImage } from "/lib/transformers.min.js";
 // transformerjs#v3
 
 const DEVICE = navigator.gpu ? "webgpu" : "wasm";
