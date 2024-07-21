@@ -232,7 +232,7 @@ watch([imgSrc], () => {
 
       <template v-if="!modelReady">
         <div class="divider sm:divider-horizontal"></div>
-        <div class="text-xl text-primary flex-row flex align-middle">
+        <div class="text-base text-info flex-row flex align-middle">
           <span class="loading loading-spinner mr-3"></span>
           {{ modelStatus }}
         </div>
