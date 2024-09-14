@@ -8,3 +8,4 @@ export * from "./diff-view";
 export * from "./led-view";
 export * from "./silk-transfer";
 export * from "./image-background-removal";
+export * from "./flashing-view";

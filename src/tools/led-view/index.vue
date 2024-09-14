@@ -2,9 +2,8 @@
 
 import { Vue3Marquee } from 'vue3-marquee'
 
-import { ref, reactive } from 'vue'
-import { useElementSize, useFullscreen } from '@vueuse/core'
-
+import { ref, reactive, watch } from 'vue'
+import { useElementSize, useFullscreen, useWakeLock } from '@vueuse/core'
 
 const el = ref(null);
 const inputEl = ref(null);
@@ -12,22 +11,33 @@ const inputEl = ref(null);
 const pause = ref(false);
 
 const { width, height } = useElementSize(el);
-const { toggle } = useFullscreen(el)
+const { toggle: toggleFullscreen, isFullscreen } = useFullscreen(el)
+const { isSupported, request, release } = useWakeLock()
 
 const form = reactive({
   duration: 10,
   text: "请输入...",
   scale: 0.5,
   spacing: 0.1,
+  bgColor: "#ffffff",
   color: "",
 });
 
-function handleFullScreen() {
-  toggle();
-}
 function handlePause() {
   pause.value = !pause.value;
 }
+
+// watch fullscreen ，禁用浏览器熄屏
+if (isSupported) {
+  watch(isFullscreen, (val) => {
+    if (val) {
+      request("screen");
+    } else {
+      release();
+    }
+  })
+}
+
 
 </script>
 
@@ -74,20 +84,22 @@ function handlePause() {
         <option :value="0">间距 0%</option>
       </select>
 
-      <input type="color" class="border-primary input" v-model="form.color">
+      <input type="color" class="border-primary input w-20" v-model="form.bgColor">
+      <input type="color" class="border-primary input w-20" v-model="form.color">
 
-      <button type="button" class="btn btn-primary" @click="handleFullScreen">全屏</button>
+      <button type="button" class="btn btn-primary" @click="toggleFullscreen">全屏</button>
 
     </div>
     <div class="divider"></div>
     <div class="flex flex-row flex-auto border border-primary overflow-hidden select-none bg-base-100" ref="el"
-      @dblclick="handleFullScreen" @click="handlePause">
+      @dblclick="toggleFullscreen" @click="handlePause">
       <Vue3Marquee class="!absolute overflow-hidden" :duration="form.duration" :style="{
         height: `${height}px`,
         width: `${width}px`,
         fontSize: `${height * form.scale}px`,
         lineHeight: `${height}px`,
         letterSpacing: `${height * form.scale * form.spacing}px`,
+        backgroundColor: `${form.bgColor ? form.bgColor : 'inherit'}`,
         color: `${form.color ? form.color : 'inherit'}`,
         pointerEvents: 'none'
       }" :pause="pause">
