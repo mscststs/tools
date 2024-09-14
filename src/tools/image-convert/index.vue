@@ -5,7 +5,7 @@ import { ref, reactive, watch } from "vue";
 import { filesize } from "filesize";
 import { createBlob, getImage, download, formatTime, createCanvas } from "../../utils";
 
-const supportClipBoard = !!navigator?.clipboard?.read ?? false;
+const supportClipBoard = !!navigator?.clipboard?.read;
 const accessClipboard = usePermission("clipboard-read");
 
 const imgRef = ref();

@@ -7,7 +7,7 @@ import { getImage, download, formatTime } from "../../utils";
 const supportWebgpu = !!navigator.gpu;
 const showSupportAlert = ref(true);
 
-const supportClipBoard = !!navigator?.clipboard?.read ?? false;
+const supportClipBoard = !!navigator?.clipboard?.read;
 const accessClipboard = usePermission("clipboard-read");
 
 const modelReady = ref(false);

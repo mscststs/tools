@@ -14,9 +14,9 @@ const result = ref("");
 const imgSrc = ref("");
 const imgRef = ref();
 
-const supportClipBoard = !!navigator?.clipboard?.read ?? false;
-const supportGetUserMedia = !!navigator?.mediaDevices?.getUserMedia ?? false;
-const supportGetDisplayMedia = !!navigator?.mediaDevices?.getDisplayMedia ?? false;
+const supportClipBoard = !!navigator?.clipboard?.read;
+const supportGetUserMedia = !!navigator?.mediaDevices?.getUserMedia;
+const supportGetDisplayMedia = !!navigator?.mediaDevices?.getDisplayMedia;
 
 const accessClipboard = usePermission("clipboard-read");
 const accessGetUserMedia = usePermission("camera");
