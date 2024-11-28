@@ -1,6 +1,6 @@
 interface Window {
   escape?: {
     version: string;
-    GM_xmlhttpRequest?: Function;
+    GM_xmlhttpRequest?: function;
   };
 }

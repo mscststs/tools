@@ -9,3 +9,4 @@ export * from "./led-view";
 export * from "./silk-transfer";
 export * from "./image-background-removal";
 export * from "./flashing-view";
+export * from "./panorama-view";

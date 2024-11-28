@@ -18,7 +18,7 @@
 // @run-at       document-start
 // ==/UserScript==
 
-(function () {
+(() => {
   unsafeWindow.escape = {
     version: "0.1",
     GM_xmlhttpRequest: (...args) => GM_xmlhttpRequest(...args),
